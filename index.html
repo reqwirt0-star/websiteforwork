@@ -310,38 +310,33 @@
     }
     .login-form-container p {
       margin-top: 0;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       color: var(--text-secondary);
     }
     .login-lang-switcher {
-        position: absolute;
-        top: 20px;
-        right: 20px;
         display: flex;
-        gap: 8px;
-        background-color: var(--background-card);
-        padding: 5px;
+        justify-content: center;
+        margin-bottom: 25px;
+        background-color: #f0f0f2;
         border-radius: 10px;
-        border: 1px solid var(--border-color);
+        padding: 4px;
     }
     .login-lang-switcher button {
-        background: none;
-        border: 2px solid transparent;
-        font-size: 20px;
-        cursor: pointer;
-        padding: 5px;
-        opacity: 0.5;
-        transition: all 0.2s ease;
-        line-height: 1;
+        flex: 1;
+        padding: 8px;
+        border: none;
+        background-color: transparent;
         border-radius: 8px;
-    }
-    .login-lang-switcher button:hover {
-        opacity: 1;
-        background-color: var(--light-blue-bg);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.25s ease;
     }
     .login-lang-switcher button.active {
-        opacity: 1;
-        border-color: var(--primary-blue);
+        background-color: var(--background-card);
+        color: var(--primary-blue);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
     }
     .login-form-container input {
       width: 100%; padding: 14px; margin-bottom: 15px;
@@ -409,14 +404,14 @@
   </div>
 
   <div id="login-screen">
-      <div class="login-lang-switcher">
-        <button id="login-lang-ru" onclick="switchLanguage('ru')" title="Русский">🇷🇺</button>
-        <button id="login-lang-uk" onclick="switchLanguage('uk')" title="Українська">🇺🇦</button>
-        <button id="login-lang-en" onclick="switchLanguage('en')" title="English">🇬🇧</button>
-      </div>
       <div class="login-form-container">
           <h1 data-key="loginHeader">ChaterLab</h1>
           <p data-key="loginSubheader">Панель быстрых ответов</p>
+          <div class="login-lang-switcher">
+            <button id="login-lang-ru" onclick="switchLanguage('ru')">RU</button>
+            <button id="login-lang-uk" onclick="switchLanguage('uk')">UA</button>
+            <button id="login-lang-en" onclick="switchLanguage('en')">ENG</button>
+          </div>
           <form id="login-form">
               <input type="text" id="login-username" data-key="loginPlaceholder" placeholder="Логин (admin)" required>
               <input type="password" id="login-password" data-key="passwordPlaceholder" placeholder="Пароль (admin)" required>
@@ -565,7 +560,7 @@
         document.querySelectorAll('[data-key]').forEach(el => {
             const key = el.dataset.key;
             const translation = translations[lang][key];
-            if (translation) {
+            if (translation !== undefined) {
                 if (el.tagName === 'INPUT') {
                     el.placeholder = translation;
                 } else {
@@ -757,8 +752,8 @@
       if(lang === 'en'){
         jobDescHeaders = ["Location", "Experience", "Schedule", "Button"];
         jobDescData = [
-            ["Kazakhstan", "Basic / No experience", "08:00–16:00, 16:00–00:00, 00:00–08:00", "Job Description (ENG)"],
-            ["Kazakhstan", "Prime experience", "14:00–22:00, 22:00–06:00", "Job Description. Prime (ENG)"]
+            ["Kazakhstan", "Basic / No experience", "08:00–16:00, 16:00–00:00, 00:00–08:00", `${t.jobDescButtonLabel} (ENG)`],
+            ["Kazakhstan", "Prime experience", "14:00–22:00, 22:00–06:00", `${t.jobPrimeButtonLabel} (ENG)`]
         ];
         contactHeaders = ["Location", "Contacts"];
         contactData = [
@@ -774,8 +769,8 @@
       } else { // Russian and Ukrainian have similar instruction structure
         jobDescHeaders = (lang === 'ru') ? ["Локация", "Опыт", "График", "Кнопка"] : ["Локація", "Досвід", "Графік", "Кнопка"];
         jobDescData = [
-            ["Казахстан", "Без опыта / базовый", "08:00–16:00, 16:00–00:00, 00:00–08:00", "Описание вакансии (RU)"],
-            ["Казахстан", "Опыт Прайма", "14:00–22:00, 22:00–06:00", "Описание вакансии. Прайм (RU)"]
+            ["Казахстан", "Без опыта / базовый", "08:00–16:00, 16:00–00:00, 00:00–08:00", `${t.jobDescButtonLabel} (RU)`],
+            ["Казахстан", "Опыт Прайма", "14:00–22:00, 22:00–06:00", `${t.jobPrimeButtonLabel} (RU)`]
         ];
         contactHeaders = (lang === 'ru') ? ["Локация", "Контакты"] : ["Локація", "Контакти"];
         contactData = [
