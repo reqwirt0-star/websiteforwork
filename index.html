@@ -108,13 +108,12 @@
 
     #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 2000; overflow: hidden; }
     
-    /* ИЗМЕНЕНИЕ 1: Добавлен ::after для затемнения градиента */
+    /* ИЗМЕНЕНИЕ: Добавлен ::after для затемнения градиента */
     .login-background { 
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
       background: linear-gradient(315deg, #007aff, #5856d6, #ff2d55, #ff9500); 
       background-size: 400% 400%; animation: gradientAnimation 20s ease infinite; 
       z-index: 1; 
-      /* Добавлено, чтобы ::after позиционировался относительно него */
       position: relative; 
     }
     
@@ -261,7 +260,7 @@
         <div class="toggle">
           <button id="btnEN" onclick="switchLanguage('en')">EN</button>
           <button id="btnUA" onclick="switchLanguage('uk')">UA</button>
-          <button id="btnRU" onclick="switchLanguage('ru')">RU</button>
+          <button id="btnRU" class="active" onclick="switchLanguage('ru')">RU</button>
         </div>
         <h3 id="infoHeader" data-key="aboutHeader"></h3>
         <p id="infoText" data-key="aboutText"></p>
@@ -392,9 +391,8 @@
         return getLocalStorage('chaterlabLoggedIn', false);
     }
     
-    /* ИЗМЕНЕНИЕ 2: Реализация handleLogin с event.preventDefault() */
     function handleLogin(event) {
-        event.preventDefault(); // <-- ГЛАВНОЕ ИЗМЕНЕНИЕ: Предотвращаем перезагрузку страницы
+        event.preventDefault(); // Предотвращаем перезагрузку страницы
 
         const usernameInput = document.getElementById('login-username');
         const passwordInput = document.getElementById('login-password');
@@ -460,16 +458,20 @@
         const instructions = document.getElementById('instructions');
         const data = appData.i18n[lang];
         
-        // Динамический контент инструкции (просто пример, для полной работы нужно добавить сюда код)
+        // Восстанавливаем заглушку для инструкции
         instructions.innerHTML = `
-            <h4><span class="step-number">1</span>${data.instructionHeader}</h4>
+            <h3>${data.instructionHeader}</h3>
             <div class="step">
                 <h4><span class="step-number">1</span> ${data.greetingButtonLabel}</h4>
-                <p>${appData.templates[lang]?.greetings?.[0] || 'Greeting text placeholder'}</p>
+                <p>Нажмите кнопку, чтобы скопировать приветствие для первого сообщения.</p>
             </div>
             <div class="step">
                 <h4><span class="step-number">2</span> ${data.jobDescButtonLabel}</h4>
-                <p>${appData.templates[lang]?.jobDescriptions?.[0] || 'Job description text placeholder'}</p>
+                <p>Нажмите кнопку, чтобы скопировать описание вакансии для отправки кандидату.</p>
+            </div>
+            <div class="step">
+                <h4><span class="step-number">3</span> ${data.flirtButtonLabel}</h4>
+                <p>Нажмите кнопку, чтобы скопировать флирт-задание для теста.</p>
             </div>
         `;
     }
@@ -516,7 +518,7 @@
         templateIndexes[lang][type] = (templateIndexes[lang][type] + 1) % templates.length;
     }
     
-    // Copy functions using copyAndCycle
+    // ВОССТАНОВЛЕННЫЕ ФУНКЦИИ КОПИРОВАНИЯ
     function copyGreetingENG() { copyAndCycle('en', 'greetings', 'btn-greeting-en'); }
     function copyJobENG() { copyAndCycle('en', 'jobDescriptions', 'btn-job-en'); }
     function copyFlirtENG() { copyAndCycle('en', 'flirtClosings', 'btn-flirt-en'); }
@@ -616,14 +618,14 @@
         switchLanguage(initialLang);
         
         if (loggedIn) {
-            // Если пользователь залогинен, скрываем экран логина сразу
+            // Если пользователь залогинен
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             document.getElementById('app-container').style.opacity = 1;
             
             toggleMobileView('buttons');
             setupDarkMode();
-            // Apply initial favorite states
+            // Применяем состояние избранного
             const favorites = getLocalStorage('chaterlabFavorites', []);
             favorites.forEach(id => {
                 const favToggle = document.querySelector(`#${id} .favorite-toggle`);
