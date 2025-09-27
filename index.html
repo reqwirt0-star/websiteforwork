@@ -413,8 +413,8 @@
             <button id="login-lang-en" onclick="switchLanguage('en')">ENG</button>
           </div>
           <form id="login-form">
-              <input type="text" id="login-username" data-key="loginPlaceholder" placeholder="Логин (admin)" required>
-              <input type="password" id="login-password" data-key="passwordPlaceholder" placeholder="Пароль (admin)" required>
+              <input type="text" id="login-username" data-key="loginPlaceholder" required>
+              <input type="password" id="login-password" data-key="passwordPlaceholder" required>
               <button type="submit" data-key="loginButton">Войти</button>
               <div id="login-error"></div>
           </form>
@@ -476,8 +476,8 @@
         en: {
             loginHeader: "ChaterLab",
             loginSubheader: "Quick Replies Panel",
-            loginPlaceholder: "Login (admin)",
-            passwordPlaceholder: "Password (admin)",
+            loginPlaceholder: "Login",
+            passwordPlaceholder: "Password",
             loginButton: "Log In",
             appHeader: "ChaterLab Quick Replies",
             repliesTab: "Replies",
@@ -499,8 +499,8 @@
         ru: {
             loginHeader: "ChaterLab",
             loginSubheader: "Панель быстрых ответов",
-            loginPlaceholder: "Логин (admin)",
-            passwordPlaceholder: "Пароль (admin)",
+            loginPlaceholder: "Логин",
+            passwordPlaceholder: "Пароль",
             loginButton: "Войти",
             appHeader: "ChaterLab Quick Replies",
             repliesTab: "Ответы",
@@ -522,8 +522,8 @@
         uk: {
             loginHeader: "ChaterLab",
             loginSubheader: "Панель швидких відповідей",
-            loginPlaceholder: "Логін (admin)",
-            passwordPlaceholder: "Пароль (admin)",
+            loginPlaceholder: "Логін",
+            passwordPlaceholder: "Пароль",
             loginButton: "Увійти",
             appHeader: "ChaterLab Quick Replies",
             repliesTab: "Відповіді",
@@ -758,7 +758,7 @@
         contactHeaders = ["Location", "Contacts"];
         contactData = [
             ["Philippines", "Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915"],
-            ["Kazakhstan (Prime)", "Telegram: @kruzhkov"]
+            ["Kazakhstan (Prime)", "Telegram: @sandra01075 / WhatsApp: +380669014312"]
         ];
         htmlContent = `<h3 data-key="instructionHeader">${t.instructionHeader}</h3>
           <div class="step"><h4><span class="step-number">1</span>Candidate Greeting</h4><ul><li>Russian audience → <b>${t.greetingButtonLabel} (RU)</b></li><li>English audience → <b>${t.greetingButtonLabel} (ENG)</b></li></ul></div>
@@ -775,7 +775,7 @@
         contactHeaders = (lang === 'ru') ? ["Локация", "Контакты"] : ["Локація", "Контакти"];
         contactData = [
             ["Филиппины", "Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915"],
-            ["Казахстан (опыт Прайма)", "Telegram: @kruzhkov"]
+            [(lang === 'ru') ? "Казахстан (опыт Прайма)" : "Казахстан (досвід Прайм)", "Telegram: @sandra01075 / WhatsApp: +380669014312"]
         ];
         const audience_ru = (lang === 'ru') ? "Русскоязычная аудитория" : "Російськомовна аудиторія";
         const audience_en = (lang === 'ru') ? "Англоязычная аудитория" : "Англомовна аудиторія";
