@@ -23,12 +23,10 @@
         display: none;  
         flex-direction: column;
         min-height: 100vh;
-        /* НОВОЕ: Плавное появление панели */
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
     }
 
-    /* ===== НОВОЕ: ЭКРАН АНИМАЦИИ ===== */
     #animation-overlay {
         position: fixed;
         top: 0;
@@ -36,7 +34,7 @@
         width: 100%;
         height: 100%;
         background-color: #f5f5f7;
-        display: none; /* Управляется JS */
+        display: none;
         justify-content: center;
         align-items: center;
         z-index: 3000;
@@ -48,7 +46,6 @@
         font-weight: 600;
         opacity: 0;
     }
-    /* Класс для запуска анимации */
     #animation-overlay.animate .animation-content h1 {
         animation: fadeInOut 2.5s ease-in-out forwards;
     }
@@ -251,7 +248,6 @@
       width: 300px;
       max-width: 90%;
       text-align: center;
-      /* НОВОЕ: Плавное исчезновение формы */
       transition: opacity 0.4s ease-out;
     }
     .login-form-container h2 {
@@ -283,7 +279,6 @@
     .login-form-container button:hover {
       background-color: #005ecb;
     }
-    /* ===== НОВОЕ: СТИЛЬ ДЛЯ ВСПЛЫВАЮЩЕЙ ОШИБКИ ===== */
     #login-error {
       color: #fff;
       background-color: #ff3b30;
@@ -434,18 +429,11 @@
   <div id="toast" class="toast-notification"></div>
 
   <script>
-    // =========================================================================
-    // 1. СИСТЕМА АУТЕНТИФИКАЦИИ (ЛОГИН/ПАРОЛЬ) - ОБНОВЛЕНА
-    // =========================================================================
-    
     const USER_CREDENTIALS = {
         username: 'admin',
         password: 'admin'
     };
 
-    /**
-     * Проверяет LocalStorage на наличие активной сессии.
-     */
     function checkLogin() {
         const loginScreen = document.getElementById('login-screen');
         const appContainer = document.getElementById('app-container');
@@ -454,7 +442,6 @@
         if (localStorage.getItem('isLoggedIn') === 'true') {
             loginScreen.style.display = 'none';
             appContainer.style.display = 'flex';
-            // Плавное появление панели
             setTimeout(() => appContainer.style.opacity = '1', 50); 
             body.classList.remove('login-active');
             return true;
@@ -467,9 +454,6 @@
         }
     }
 
-    /**
-     * Обрабатывает попытку входа с анимацией.
-     */
     function handleLogin(event) {
         event.preventDefault(); 
         
@@ -484,43 +468,36 @@
             const loginFormContainer = document.querySelector('.login-form-container');
             const animationOverlay = document.getElementById('animation-overlay');
 
-            // 1. Плавно прячем форму входа
             loginFormContainer.style.opacity = '0';
             
-            // 2. После исчезновения формы, запускаем анимацию
             setTimeout(() => {
                 animationOverlay.style.display = 'flex';
                 animationOverlay.classList.add('animate');
 
-                // 3. Ждем завершения анимации
                 setTimeout(() => {
-                    // 4. Показываем рабочую панель
                     checkLogin(); 
                     
-                    // 5. Финальная инициализация контента
+                    // ===== ЭТО ИСПРАВЛЕНИЕ =====
+                    // Прячем оверлей анимации, чтобы стала видна панель
+                    animationOverlay.style.display = 'none';
+                    
                     setLanguage('ENG'); 
                     toggleMobileView('buttons');
                     
-                    // Восстанавливаем видимость формы на случай выхода из системы
                     loginFormContainer.style.opacity = '1';
 
-                }, 2500); // Длительность анимации
-            }, 400); // Задержка после исчезновения формы
+                }, 2500);
+            }, 400); 
             
         } else {
-            // НОВЫЙ БЛОК ОШИБКИ
             errorDiv.textContent = 'Неверные данные. Свяжитесь с менеджером для уточнения.';
             errorDiv.classList.add('show');
-            // Прячем ошибку через 4 секунды
             setTimeout(() => {
                 errorDiv.classList.remove('show');
             }, 4000);
         }
     }
 
-    /**
-     * Завершает сессию и показывает экран входа.
-     */
     function logout() {
         localStorage.removeItem('isLoggedIn');
         checkLogin(); 
@@ -531,35 +508,25 @@
 
     let currentLang = 'ENG';
 
-    // =========================================================================
-    // 2. АРХИВЫ С ТЕКСТАМИ И ИНДЕКСАМИ ДЛЯ ЦИКЛИЧЕСКОГО ПЕРЕКЛЮЧЕНИЯ
-    //    (Убедитесь, что у вас здесь полные массивы текстов)
-    // =========================================================================
-    
-    // Внимание: Здесь должны быть полные массивы с текстами
-    const greetingsENG = [ "Good day! We are ChaterLab...", /* ... еще 14 вариантов */ ];
+    const greetingsENG = [ "Good day! We are ChaterLab...", /* ... еще варианты */ ];
     let indexGreetingENG = 0;
-    const jobDescriptionsENG = [ `Job Description:\n📌 Task:...`, /* ... еще 14 вариантов */ ];
+    const jobDescriptionsENG = [ `Job Description:\n📌 Task:...`, /* ... еще варианты */ ];
     let indexJobENG = 0;
-    const flirtClosingsENG = [ "Please make 10 phrases for flirting...", /* ... еще 14 вариантов */ ];
+    const flirtClosingsENG = [ "Please make 10 phrases for flirting...", /* ... еще варианты */ ];
     let indexFlirtENG = 0;
-    const contactsENG = [ "Thank you for completing the test...", /* ... еще 14 вариантов */ ];
+    const contactsENG = [ "Thank you for completing the test...", /* ... еще варианты */ ];
     let indexContactENG = 0;
-    const greetingsRU = [ "Добрый день! Мы компания ChaterLab...", /* ... еще 14 вариантов */ ];
+    const greetingsRU = [ "Добрый день! Мы компания ChaterLab...", /* ... еще варианты */ ];
     let indexGreetingRU = 0;
-    const jobDescriptionsRU = [ `Описание вакансии:\n📌 Задача:...`, /* ... еще 14 вариантов */ ];
+    const jobDescriptionsRU = [ `Описание вакансии:\n📌 Задача:...`, /* ... еще варианты */ ];
     let indexJobRU = 0;
-    const jobDescriptionsPrimeRU = [ `Описание вакансии:\n📌 Задача:...`, /* ... еще 14 вариантов */ ];
+    const jobDescriptionsPrimeRU = [ `Описание вакансии:\n📌 Задача:...`, /* ... еще варианты */ ];
     let indexJobPrimeRU = 0;
-    const flirtClosingsRU = [ "Пожалуйста, составьте 10 фраз...", /* ... еще 14 вариантов */ ];
+    const flirtClosingsRU = [ "Пожалуйста, составьте 10 фраз...", /* ... еще варианты */ ];
     let indexFlirtRU = 0;
-    const contactsRU = [ "Благодарим за выполненное тестовое...", /* ... еще 14 вариантов */ ];
+    const contactsRU = [ "Благодарим за выполненное тестовое...", /* ... еще варианты */ ];
     let indexContactRU = 0;
 
-
-    // =========================================================================
-    // 3. ФУНКЦИИ КОПИРОВАНИЯ И ПЕРЕКЛЮЧЕНИЯ (Без изменений)
-    // =========================================================================
     
     function showToast(message) {
         const toast = document.getElementById('toast');
@@ -722,9 +689,6 @@
       }
     }
     
-    /**
-     * Скрывает один блок и показывает другой на мобильном.
-     */
     function toggleMobileView(view) {
         const sidebar = document.getElementById('sidebarBlock');
         const info = document.getElementById('infoBlock');
@@ -752,20 +716,17 @@
         }
     }
 
-    // Инициализация при загрузке страницы
     document.addEventListener('DOMContentLoaded', () => {
         const loggedIn = checkLogin(); 
 
         document.getElementById('login-form').addEventListener('submit', handleLogin);
         
-        // Инициализация контента, если пользователь уже залогинен
         if (loggedIn) {
             setLanguage('ENG'); 
             toggleMobileView('buttons');
         }
     });
 
-    // Слушатель изменения размера окна
     window.addEventListener('resize', () => {
         if (!window.matchMedia("(max-width: 768px)").matches) {
             toggleMobileView('buttons');
