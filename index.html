@@ -341,7 +341,10 @@
         width: 100%; min-width: unset; padding: 15px;
         border-right: none; border-bottom: 1px solid var(--border-color);
       }
-      .info { padding: 20px 15px; display: none; }
+      .info { 
+        padding: 20px 15px;
+        /* ИСПРАВЛЕНИЕ: Удалена строка "display: none;" отсюда, чтобы JS мог управлять видимостью */
+      }
       .instructions table { display: none; }
       .instructions .responsive-card-list {
           display: block; width: 100%; margin-top: 15px;
@@ -648,7 +651,9 @@
         const btnInstructions = document.getElementById('switchInstructions');
         
         if (!window.matchMedia("(max-width: 768px)").matches) {
-            sidebar.style.display = 'flex'; info.style.display = 'block'; return;
+            sidebar.style.display = 'flex'; 
+            info.style.display = 'block'; 
+            return;
         }
 
         const isButtonsView = view === 'buttons';
@@ -671,6 +676,14 @@
         if (!window.matchMedia("(max-width: 768px)").matches) {
             document.getElementById('sidebarBlock').style.display = 'flex';
             document.getElementById('infoBlock').style.display = 'block';
+        } else {
+            // При изменении размера на мобильный, нужно снова установить правильное начальное состояние
+            const activeSwitcher = document.querySelector('.mobile-switcher button.active');
+            if (activeSwitcher.id === 'switchButtons') {
+                toggleMobileView('buttons');
+            } else {
+                toggleMobileView('instructions');
+            }
         }
     });
   </script>
