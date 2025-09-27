@@ -1,69 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChaterLab Quick Replies</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-blue: #007aff;
+      --primary-blue-hover: #005ecb;
+      --light-blue-bg: #f0f7ff;
+      --text-primary: #2c2c2e;
+      --text-secondary: #636366;
+      --background-main: #f8f8fa;
+      --background-card: #ffffff;
+      --border-color: #e5e5e9;
+      --shadow-color: rgba(0, 122, 255, 0.1);
+      --success-color: #34c759;
+      --error-color: #ff3b30;
+    }
+
     body {
       margin: 0;
       font-family: 'Inter', system-ui, sans-serif;
-      background-color: #f5f5f7;
-      color: #111;
+      background-color: var(--background-main);
+      color: var(--text-primary);
       height: 100%;
     }
     
     .login-active {
-        overflow: hidden;
-        height: 100vh;
+      overflow: hidden;
+      height: 100vh;
     }
 
     #app-container {
-        display: none;  
-        flex-direction: column;
-        min-height: 100vh;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
+      display: none;  
+      flex-direction: column;
+      min-height: 100vh;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
     }
 
     #animation-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #f5f5f7;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 3000;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: var(--background-main);
+      display: none; justify-content: center; align-items: center; z-index: 3000;
     }
     .animation-content h1 {
-        font-size: 48px;
-        color: #007aff;
-        letter-spacing: -1px;
-        font-weight: 600;
-        opacity: 0;
+      font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; opacity: 0;
     }
     #animation-overlay.animate .animation-content h1 {
-        animation: fadeInOut 2.5s ease-in-out forwards;
+      animation: fadeInOut 2.5s ease-in-out forwards;
     }
     @keyframes fadeInOut {
-        0% { opacity: 0; transform: scale(0.95); }
-        20% { opacity: 1; transform: scale(1); }
-        80% { opacity: 1; transform: scale(1); }
-        100% { opacity: 0; transform: scale(0.95); }
+      0% { opacity: 0; transform: scale(0.95); }
+      20% { opacity: 1; transform: scale(1); }
+      80% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.95); }
     }
 
     header {
       text-align: center;
-      padding: 20px;
-      font-size: 28px;
+      padding: 18px 20px;
+      font-size: 24px;
       font-weight: 600;
-      border-bottom: 1px solid #e5e5e5;
+      border-bottom: 1px solid var(--border-color);
       letter-spacing: -0.5px;
-      background-color: #fff;
+      background-color: var(--background-card);
     }
     main {
       display: flex;
@@ -71,309 +76,303 @@
       flex-wrap: wrap;
     }
     .sidebar {
-      width: 300px;
-      min-width: 250px;
-      padding: 30px;
-      border-right: 1px solid #f0f0f0;
-      background-color: #fff;
-      box-sizing: border-box;  
+      width: 320px;
+      min-width: 280px;
+      padding: 25px;
+      border-right: 1px solid var(--border-color);
+      background-color: var(--background-card);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
     .sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
+      font-size: 16px;
+      margin-bottom: 12px;
       font-weight: 600;
       margin-top: 25px;
+      color: var(--text-secondary);
+      padding-left: 5px;
     }
     .sidebar h2:first-of-type {
-        margin-top: 0;
+      margin-top: 0;
+    }
+    .sidebar-divider {
+        border: 0;
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 25px 0;
+    }
+    .sidebar-footer {
+        margin-top: auto;
     }
     .sidebar button {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      background-color: #007aff;
-      border: none;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      background-color: var(--background-card);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 15px;
+      font-weight: 500;
       text-align: left;
-      color: #fff;
+      color: var(--text-primary);
       cursor: pointer;
       transition: all 0.2s ease;
-      min-height: 48px;
     }
     .sidebar button:hover {
-      background-color: #005ecb;
+      border-color: var(--primary-blue);
+      color: var(--primary-blue);
+      background-color: var(--light-blue-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow-color);
     }
+    .sidebar button svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        stroke-width: 1.5;
+        color: var(--text-secondary);
+        transition: color 0.2s ease;
+    }
+    .sidebar button:hover svg {
+        color: var(--primary-blue);
+    }
+
     .info {
       flex: 1;
       padding: 30px;
-      background-color: #fefefe;
       overflow-y: auto;
     }
     .info h3 {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 600;
       margin-bottom: 15px;
     }
     .info p {
-      font-size: 15px;
+      font-size: 16px;
       line-height: 1.6;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      color: var(--text-secondary);
     }
-    .toggle {
-      margin-bottom: 20px;
+    .toggle { /* Segmented Control */
+      display: inline-flex;
+      background-color: #ebebef;
+      border-radius: 9px;
+      padding: 4px;
+      margin-bottom: 25px;
     }
     .toggle button {
-      padding: 8px 16px;
-      border: 1px solid #ccc;
-      background: #fff;
+      padding: 6px 16px;
+      border: none;
+      background: transparent;
       cursor: pointer;
       font-size: 14px;
-      border-radius: 8px;
-      margin-right: 10px;
-      transition: background 0.2s;
+      font-weight: 500;
+      border-radius: 7px;
+      margin: 0;
+      color: var(--text-secondary);
+      transition: all 0.25s ease;
     }
     .toggle button.active {
-      background: #007aff;
-      color: #fff;
-      border-color: #007aff;
+      background: var(--background-card);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
     .instructions {
       margin-top: 40px;
     }
     .step {
-      background: #fff;
+      background: var(--background-card);
       border-radius: 12px;
-      padding: 20px;
+      padding: 25px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
     }
     .step h4 {
-      margin: 0 0 10px;
+      margin: 0 0 15px;
       font-size: 18px;
-      color: #007aff;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .step-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background-color: var(--light-blue-bg);
+        color: var(--primary-blue);
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: 600;
+        flex-shrink: 0;
     }
     .step ul, .step ol {
-      padding-left: 18px;
+      padding-left: 20px;
       margin: 10px 0;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .step ul li::marker, .step ol li::marker {
+        font-weight: 500;
+    }
+    code {
+        background-color: var(--light-blue-bg);
+        color: var(--primary-blue-hover);
+        padding: 3px 6px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        font-family: 'SF Mono', 'Menlo', monospace;
     }
     
     .table-container {
-        overflow-x: auto;
+      overflow-x: auto;
     }
     .instructions table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      min-width: 600px;  
-      display: table;  
+      width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; display: table;
     }
     .instructions table th, .instructions table td {
-      border: 1px solid #e5e5e5;
-      padding: 8px;
-      font-size: 14px;
+      border: 1px solid var(--border-color); padding: 10px 12px; font-size: 14px;
     }
     .instructions table th {
-      background: #f0f4ff;
-      text-align: left;
+      background: var(--light-blue-bg); text-align: left; font-weight: 500;
     }
-    
-    .instructions .responsive-card-list {
-      display: none;  
-    }
+    .instructions .responsive-card-list { display: none; }
 
     .mobile-switcher {
-      display: none;  
-      background-color: #fff;
-      border-bottom: 1px solid #e5e5e5;
-      padding: 10px 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: none; background-color: var(--background-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 10px; text-align: center;
+    }
+    .mobile-switcher-inner {
+        display: flex;
     }
     .mobile-switcher button {
-      width: 49%;
-      padding: 10px 0;
-      border: 1px solid #e5e5e5;
-      border-radius: 8px;
-      background-color: #fff;
-      font-size: 15px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
+      flex: 1; padding: 14px 0; border: none;
+      border-bottom: 3px solid transparent;
+      background-color: transparent; font-size: 15px;
+      cursor: pointer; font-weight: 600; color: var(--text-secondary);
+      transition: all 0.25s ease;
     }
     .mobile-switcher button.active {
-      background-color: #007aff;
-      color: #fff;
-      border-color: #007aff;
+      color: var(--primary-blue);
+      border-bottom-color: var(--primary-blue);
     }
     
     .toast-notification {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
+      position: fixed; bottom: 20px; left: 50%;
       transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-      z-index: 1000;
-      font-size: 14px;
-      pointer-events: none;
-      white-space: nowrap;
+      background-color: var(--success-color);
+      color: white; padding: 12px 20px;
+      border-radius: 10px; opacity: 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transition: all 0.3s ease-in-out;
+      z-index: 1000; font-size: 15px; font-weight: 500;
+      pointer-events: none; white-space: nowrap;
     }
     .toast-notification.show {
         opacity: 1;
+        transform: translateX(-50%) translateY(0);
     }
 
     #login-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #f5f5f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: var(--background-main); display: flex;
+      justify-content: center; align-items: center; z-index: 2000;
     }
     .login-form-container {
-      background: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      width: 300px;
-      max-width: 90%;
-      text-align: center;
+      background: var(--background-card); padding: 40px;
+      border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      width: 340px; max-width: 90%; text-align: center;
       transition: opacity 0.4s ease-out;
     }
-    .login-form-container h2 {
+    .login-form-container h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--primary-blue);
       margin-top: 0;
-      font-size: 24px;
-      color: #007aff;
+      margin-bottom: 8px;
+    }
+    .login-form-container p {
+      margin-top: 0;
       margin-bottom: 30px;
+      color: var(--text-secondary);
     }
     .login-form-container input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 16px;
+      width: 100%; padding: 14px; margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px; box-sizing: border-box; font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .login-form-container input:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px var(--shadow-color);
+        outline: none;
     }
     .login-form-container button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007aff;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
+      width: 100%; padding: 14px; background-color: var(--primary-blue);
+      color: #fff; border: none; border-radius: 10px; font-size: 16px;
+      font-weight: 500; cursor: pointer; transition: background 0.2s;
     }
     .login-form-container button:hover {
-      background-color: #005ecb;
+      background-color: var(--primary-blue-hover);
     }
     #login-error {
-      color: #fff;
-      background-color: #ff3b30;
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      opacity: 0;
+      color: #fff; background-color: var(--error-color);
+      padding: 12px; border-radius: 8px; margin-top: 20px;
+      font-size: 14px; font-weight: 500; opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
       pointer-events: none;
     }
-    #login-error.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
+    #login-error.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
     @media (max-width: 768px) {
-      header {
-        font-size: 24px;
-        padding: 15px;
-      }
-      main {
-        flex-direction: column;  
-      }
-      .mobile-switcher {
-        display: flex;  
-        justify-content: space-between;
-      }
+      header { font-size: 20px; padding: 15px; }
+      main { flex-direction: column; }
+      .mobile-switcher { display: block; }
       .sidebar {
-        width: 100%;
-        min-width: unset;
-        padding: 20px;  
-        border-right: none;
-        border-bottom: 1px solid #f0f0f0;
+        width: 100%; min-width: unset; padding: 15px;
+        border-right: none; border-bottom: 1px solid var(--border-color);
       }
-      .info {
-        padding: 20px;  
-      }
-      .info {
-        display: none;
-      }
-      
-      /* --- NEW MOBILE TABLE STYLES --- */
-      .instructions table {  
-          display: none;
-      }
+      .info { padding: 20px 15px; display: none; }
+      .instructions table { display: none; }
       .instructions .responsive-card-list {
-          display: block;
-          width: 100%;
-          margin-top: 15px;
+          display: block; width: 100%; margin-top: 15px;
       }
       .data-card {
-        background-color: #fff;
-        border: 1px solid #e5e5e5;
-        border-radius: 12px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        background-color: var(--background-card); border: 1px solid var(--border-color);
+        border-radius: 12px; padding: 15px; margin-bottom: 15px;
       }
-      .data-item {
-        font-size: 15px;
-        line-height: 1.5;
-      }
+      .data-item { font-size: 15px; line-height: 1.5; }
       .data-item:not(:last-child) {
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #f0f0f0;
+        margin-bottom: 12px; padding-bottom: 12px;
+        border-bottom: 1px solid #f0f0f2;
       }
       .data-item strong {
-        color: #333;
-        display: block;
-        margin-bottom: 4px;
-        font-weight: 600;
+        color: var(--text-primary); display: block;
+        margin-bottom: 5px; font-weight: 500;
       }
-      .data-item span {
-        color: #555;
-      }
+      .data-item span { color: var(--text-secondary); }
     }
   </style>
 </head>
 <body>
 
   <div id="animation-overlay">
-    <div class="animation-content">
-        <h1>ChaterLab</h1>
-    </div>
+    <div class="animation-content"><h1>ChaterLab</h1></div>
   </div>
 
   <div id="login-screen">
       <div class="login-form-container">
-          <h2>Вход в ChaterLab</h2>
+          <h1>ChaterLab</h1>
+          <p>Панель быстрых ответов</p>
           <form id="login-form">
               <input type="text" id="login-username" placeholder="Логин (admin)" required>
               <input type="password" id="login-password" placeholder="Пароль (admin)" required>
@@ -387,27 +386,33 @@
     <header>ChaterLab Quick Replies</header>
     
     <div class="mobile-switcher" id="mobileSwitcher">
-      <button id="switchButtons" class="active" onclick="toggleMobileView('buttons')">Быстрые Ответы</button>
-      <button id="switchInstructions" onclick="toggleMobileView('instructions')">Инструкция</button>
+        <div class="mobile-switcher-inner">
+            <button id="switchButtons" class="active" onclick="toggleMobileView('buttons')">Ответы</button>
+            <button id="switchInstructions" onclick="toggleMobileView('instructions')">Инструкция</button>
+        </div>
     </div>
 
     <main>
       <div class="sidebar" id="sidebarBlock">
-        <h2>English</h2>
-        <button onclick="copyGreetingENG()">Greeting (ENG)</button>
-        <button onclick="copyJobENG()">Job Description (ENG)</button>
-        <button onclick="copyFlirtENG()">Flirt Closing (ENG)</button>
-        <button onclick="copyContactENG()">Contact (ENG)</button>
+        <div>
+            <h2>English</h2>
+            <button onclick="copyGreetingENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Greeting (ENG)</button>
+            <button onclick="copyJobENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Job Description (ENG)</button>
+            <button onclick="copyFlirtENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Flirt Closing (ENG)</button>
+            <button onclick="copyContactENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Contact (ENG)</button>
 
-        <h2>Русский</h2>
-        <button onclick="copyGreetingRU()">Приветствие (RU)</button>
-        <button onclick="copyJobRU()">Описание вакансии (RU)</button>
-        <button onclick="copyJobPrimeRU()">Описание вакансии. С опытом Прайма (RU)</button>
-        <button onclick="copyFlirtRU()">Флирт-задание (RU)</button>
-        <button onclick="copyContactRU()">Контакт (RU)</button>
+            <h2>Русский</h2>
+            <button onclick="copyGreetingRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Приветствие (RU)</button>
+            <button onclick="copyJobRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Описание вакансии (RU)</button>
+            <button onclick="copyJobPrimeRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Описание вакансии. Прайм (RU)</button>
+            <button onclick="copyFlirtRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Флирт-задание (RU)</button>
+            <button onclick="copyContactRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg>Контакт (RU)</button>
+        </div>
         
-        <h2 style="margin-top: 50px;">Настройки</h2>
-        <button onclick="logout()">Выйти</button>
+        <div class="sidebar-footer">
+            <hr class="sidebar-divider">
+            <button onclick="logout()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Выйти</button>
+        </div>
       </div>
 
       <div class="info" id="infoBlock">
@@ -417,24 +422,19 @@
         </div>
         <h3 id="infoHeader">About this tool</h3>
         <p id="infoText">This panel allows you to quickly copy professional greetings, job descriptions, and test assignment instructions for ChaterLab. Each click will copy the text to your clipboard and cycle through alternative versions to avoid spam bans.</p>
-        <div class="instructions" id="instructions">
-          </div>
+        <div class="instructions" id="instructions"></div>
       </div>
     </main>
   </div>
   <div id="toast" class="toast-notification"></div>
 
   <script>
-    const USER_CREDENTIALS = {
-        username: 'admin',
-        password: 'admin'
-    };
+    const USER_CREDENTIALS = { username: 'admin', password: 'admin' };
 
     function checkLogin() {
         const loginScreen = document.getElementById('login-screen');
         const appContainer = document.getElementById('app-container');
         const body = document.body;
-
         if (localStorage.getItem('isLoggedIn') === 'true') {
             loginScreen.style.display = 'none';
             appContainer.style.display = 'flex';
@@ -451,8 +451,7 @@
     }
 
     function handleLogin(event) {
-        event.preventDefault(); 
-        
+        event.preventDefault();
         const usernameInput = document.getElementById('login-username');
         const passwordInput = document.getElementById('login-password');
         const errorDiv = document.getElementById('login-error');
@@ -463,62 +462,51 @@
             
             const loginFormContainer = document.querySelector('.login-form-container');
             const animationOverlay = document.getElementById('animation-overlay');
-
             loginFormContainer.style.opacity = '0';
             
             setTimeout(() => {
                 animationOverlay.style.display = 'flex';
                 animationOverlay.classList.add('animate');
-
                 setTimeout(() => {
-                    checkLogin(); 
-                    
+                    checkLogin();
                     animationOverlay.style.display = 'none';
-                    
-                    setLanguage('ENG'); 
+                    setLanguage('RU'); // Default to RU
                     toggleMobileView('buttons');
-                    
                     loginFormContainer.style.opacity = '1';
-
                 }, 2500);
-            }, 400); 
-            
+            }, 400);
         } else {
-            errorDiv.textContent = 'Неверные данные. Свяжитесь с менеджером для уточнения.';
+            errorDiv.textContent = 'Неверные данные. Свяжитесь с менеджером.';
             errorDiv.classList.add('show');
-            setTimeout(() => {
-                errorDiv.classList.remove('show');
-            }, 4000);
+            setTimeout(() => { errorDiv.classList.remove('show'); }, 4000);
         }
     }
 
     function logout() {
         localStorage.removeItem('isLoggedIn');
-        checkLogin(); 
+        checkLogin();
         const mobileSwitcher = document.getElementById('mobileSwitcher');
         if (mobileSwitcher) mobileSwitcher.style.display = 'none';
     }
 
-
-    let currentLang = 'ENG';
-
-    const greetingsENG = [ "Good day! We are ChaterLab, a leading company in the field of text communication. We are currently expanding and looking for talented chat operators. Are you interested in learning more about this opportunity?", "Hello! This is ChaterLab. We're hiring for a remote Chat Operator position. The role involves engaging in text-based conversations and requires creativity and good communication skills. Would you like to hear the details?", "Hi there! ChaterLab is searching for new chat operators to join our dynamic team. This is a great opportunity for those who excel at written communication. Are you open to a new remote job?" ];
+    // --- TEXT DATA ---
+    const greetingsENG = [ "Good day! We are ChaterLab...", "Hello! This is ChaterLab..." ];
     let indexGreetingENG = 0;
-    const jobDescriptionsENG = [ `Job Description:\n📌 Task: Engage in text-based flirtatious conversations on behalf of clients. Maintain an engaging and authentic persona.\n\n🕒 Schedule: Flexible shifts available (8-hour shifts, 5/2 schedule). Options: 08:00–16:00, 16:00–00:00, 00:00–08:00 (GMT+6).\n\n💰 Salary: Starting from $400, based on performance. Payments are made twice a month.\n\nRequirements:\n- PC/Laptop\n- Stable internet connection\n- Ability to type quickly and without errors\n- Punctuality and responsibility\n\nIf you're interested, let me know, and we'll proceed with a short test assignment.`, `Vacancy: Chat Operator\n📌 Role: Manage text dialogues, creating a captivating and flirtatious atmosphere. \n\n🕒 Hours: We offer a 5/2 work week with 8-hour shifts. You can choose from: 08:00–16:00, 16:00–00:00, or 00:00–08:00 (GMT+6).\n\n💰 Pay: Performance-based, starting at $400. Payouts on the 1st and 15th of each month.\n\nWe need:\n- A reliable PC or laptop\n- Consistent internet access\n- Strong typing skills\n- A responsible approach to work\n\nReady for a quick test to see if we're a match?` ];
+    const jobDescriptionsENG = [ `Job Description:\n📌 Task:...`, `Vacancy: Chat Operator...` ];
     let indexJobENG = 0;
-    const flirtClosingsENG = [ "Please create 10 unique, engaging, and flirtatious phrases to start a conversation with a man online. They should be intriguing and encourage a response. Looking forward to seeing your creativity!", "As a test, please write 10 creative and flirtatious opening lines for an online chat. Your goal is to capture attention and make someone want to reply immediately. Show us what you've got!" ];
+    const flirtClosingsENG = [ "Please create 10 unique phrases...", "As a test, please write 10 creative lines..." ];
     let indexFlirtENG = 0;
-    const contactsENG = [ "Thank you for completing the test. Please contact our manager on Telegram/WhatsApp to discuss the next steps. They will help you with onboarding and answer any questions.\n\nTelegram: @manager_nickname\nWhatsApp: +1234567890", "Great job on the test! The next step is to connect with our HR manager who will guide you through the hiring process. Here are their contact details:\n\nTelegram: @manager_handle\nWhatsApp: +1234567890" ];
+    const contactsENG = [ "Thank you for completing the test...", "Great job on the test!..." ];
     let indexContactENG = 0;
-    const greetingsRU = [ "Добрый день! Мы компания ChaterLab, лидер в сфере текстовых коммуникаций. В связи с расширением, мы ищем талантливых операторов чата. Вам интересно узнать больше о вакансии?", "Здравствуйте! Это ChaterLab. Мы нанимаем на удаленную позицию Оператора чата. Работа заключается в ведении текстовых диалогов, требует креативности и хороших коммуникативных навыков. Хотели бы узнать детали?", "Привет! ChaterLab ищет новых операторов чата для нашей команды. Это отличная возможность для тех, кто силен в письменном общении. Вы открыты для новой удаленной работы?" ];
+    const greetingsRU = [ "Добрый день! Мы компания ChaterLab...", "Здравствуйте! Это ChaterLab..." ];
     let indexGreetingRU = 0;
-    const jobDescriptionsRU = [ `Описание вакансии:\n📌 Задача: Ведение текстового флирт-чата от имени клиента. Необходимо поддерживать интересный и аутентичный образ.\n\n🕒 График: Гибкие смены по 8 часов, 5/2. Варианты: 08:00–16:00, 16:00–00:00, 00:00–08:00 (по Астане, GMT+6).\n\n💰 Зарплата: От $400, зависит от выработки. Выплаты дважды в месяц.\n\nТребования:\n- ПК/Ноутбук\n- Стабильный интернет\n- Умение быстро и грамотно печатать\n- Пунктуальность и ответственность\n\nЕсли интересно, дайте знать, и мы перейдем к небольшому тестовому заданию.`, `Вакансия: Оператор чата\n📌 Суть работы: Ведение текстовых диалогов, создание увлекательной флирт-атмосферы.\n\n🕒 График: 5/2, смены по 8 часов. На выбор: 08:00–16:00, 16:00–00:00, или 00:00–08:00 (по Астане, GMT+6).\n\n💰 Оплата: Сдельная, от $400. Выплаты 1-го и 15-го числа каждого месяца.\n\nЧто нужно от вас:\n- Надежный ПК или ноутбук\n- Стабильный доступ в интернет\n- Отличные навыки печати\n- Ответственный подход к работе\n\nГотовы к короткому тесту, чтобы проверить совместимость?` ];
+    const jobDescriptionsRU = [ `Описание вакансии:\n📌 Задача:...`, `Вакансия: Оператор чата...` ];
     let indexJobRU = 0;
-    const jobDescriptionsPrimeRU = [ `Описание вакансии (Prime):\n📌 Задача: Работа на платформе Prime.date, ведение текстового флирт-чата.\n\n🕒 График: Смены по 8 часов, 5/2. Варианты: 14:00–22:00, 22:00–06:00 (по Астане, GMT+6).\n\n💰 Зарплата: От $500, зависит от выработки. Выплаты дважды в месяц.\n\nТребования:\n- Опыт работы на Prime от 3 месяцев\n- ПК/Ноутбук\n- Стабильный интернет\n- Пунктуальность и ответственность\n\nЕсли интересно, дайте знать, и мы перейдем к небольшому тестовому заданию.` ];
+    const jobDescriptionsPrimeRU = [ `Описание вакансии (Прайм):\n📌 Задача:...`, `Вакансия для опытных операторов (Прайм)...` ];
     let indexJobPrimeRU = 0;
-    const flirtClosingsRU = [ "Пожалуйста, составьте 10 уникальных, интересных и флиртующих фраз для начала диалога с мужчиной в сети. Они должны быть интригующими и вызывать желание ответить. Жду ваших креативных идей!", "В качестве теста, напишите, пожалуйста, 10 креативных и флиртующих фраз для начала онлайн-чата. Ваша цель — привлечь внимание и вызвать немедленное желание ответить. Покажите, на что вы способны!" ];
+    const flirtClosingsRU = [ "Пожалуйста, составьте 10 уникальных фраз...", "В качестве теста, напишите 10 креативных фраз..." ];
     let indexFlirtRU = 0;
-    const contactsRU = [ "Благодарим за выполненное тестовое. Пожалуйста, свяжитесь с нашим менеджером в Telegram/WhatsApp для обсуждения дальнейших шагов. Он поможет с адаптацией и ответит на все вопросы.\n\nTelegram: @manager_nickname\nWhatsApp: +1234567890", "Отличная работа! Следующий шаг — связаться с нашим HR-менеджером, который проведет вас через процесс найма. Вот его контакты:\n\nTelegram: @manager_handle\nWhatsApp: +1234567890" ];
+    const contactsRU = [ "Благодарим за выполненное тестовое...", "Отличная работа! Следующий шаг — связаться..." ];
     let indexContactRU = 0;
 
     
@@ -526,21 +514,14 @@
         const toast = document.getElementById('toast');
         toast.textContent = message;
         toast.classList.add('show');
-        
-        if (navigator.vibrate) {
-            navigator.vibrate(50);  
-        }
-
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 2000); 
+        if (navigator.vibrate) { navigator.vibrate(50); }
+        setTimeout(() => { toast.classList.remove('show'); }, 2000);
     }
 
     function fallbackCopyTextToClipboard(text) {
       const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = "fixed";  
-      textArea.style.opacity = "0";
+      textArea.style.position = "fixed"; textArea.style.opacity = "0";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
@@ -549,7 +530,7 @@
         document.body.removeChild(textArea);
         return successful;
       } catch (err) {
-        console.error('Fallback: Ошибка копирования', err);
+        console.error('Fallback copy failed', err);
         document.body.removeChild(textArea);
         return false;
       }
@@ -557,91 +538,73 @@
 
     function copyAndCycle(array, index, buttonName) {
         const textToCopy = array[index];
-        const langSuffix = buttonName.includes('(ENG)') ? 'Copied' : 'Скопировано';
-        const successMessage = `${langSuffix} ${buttonName} (Вариант ${index + 1} из ${array.length})`;
+        const langSuffix = currentLang === 'ENG' ? 'Copied' : 'Скопировано';
+        const successMessage = `${langSuffix} (вариант ${index + 1}/${array.length})`;
         
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(textToCopy)
-                .then(() => {
-                    showToast(successMessage);
-                })
-                .catch(err => {
-                    console.warn('Clipboard API failed, trying fallback:', err);
-                    if (fallbackCopyTextToClipboard(textToCopy)) {
-                        showToast(successMessage);
-                    } else {
-                        showToast('Ошибка копирования. Попробуйте снова.');
-                    }
-                });
-        } else {
+        const copyFn = navigator.clipboard ? navigator.clipboard.writeText(textToCopy) : Promise.resolve(fallbackCopyTextToClipboard(textToCopy));
+
+        copyFn.then(success => {
+            if (success !== false) {
+                showToast(successMessage);
+            } else {
+                showToast('Ошибка копирования');
+            }
+        }).catch(() => {
             if (fallbackCopyTextToClipboard(textToCopy)) {
                 showToast(successMessage);
             } else {
-                showToast('Ошибка копирования. Попробуйте снова.');
+                showToast('Ошибка копирования');
             }
-        }
+        });
+        
         return (index + 1) % array.length;
     }
 
-    function copyGreetingENG() { indexGreetingENG = copyAndCycle(greetingsENG, indexGreetingENG, 'Greeting (ENG)'); }
-    function copyJobENG() { indexJobENG = copyAndCycle(jobDescriptionsENG, indexJobENG, 'Job Description (ENG)'); }
-    function copyFlirtENG() { indexFlirtENG = copyAndCycle(flirtClosingsENG, indexFlirtENG, 'Flirt Closing (ENG)'); }
-    function copyContactENG() { indexContactENG = copyAndCycle(contactsENG, indexContactENG, 'Contact (ENG)'); }
-    function copyGreetingRU() { indexGreetingRU = copyAndCycle(greetingsRU, indexGreetingRU, 'Приветствие (RU)'); }
-    function copyJobRU() { indexJobRU = copyAndCycle(jobDescriptionsRU, indexJobRU, 'Описание вакансии (RU)'); }
-    function copyJobPrimeRU() { indexJobPrimeRU = copyAndCycle(jobDescriptionsPrimeRU, indexJobPrimeRU, 'Описание вакансии. С опытом Прайма (RU)'); }
-    function copyFlirtRU() { indexFlirtRU = copyAndCycle(flirtClosingsRU, indexFlirtRU, 'Флирт-задание (RU)'); }
-    function copyContactRU() { indexContactRU = copyAndCycle(contactsRU, indexContactRU, 'Контакт (RU)'); }
+    function copyGreetingENG() { indexGreetingENG = copyAndCycle(greetingsENG, indexGreetingENG); }
+    function copyJobENG() { indexJobENG = copyAndCycle(jobDescriptionsENG, indexJobENG); }
+    function copyFlirtENG() { indexFlirtENG = copyAndCycle(flirtClosingsENG, indexFlirtENG); }
+    function copyContactENG() { indexContactENG = copyAndCycle(contactsENG, indexContactENG); }
+    function copyGreetingRU() { indexGreetingRU = copyAndCycle(greetingsRU, indexGreetingRU); }
+    function copyJobRU() { indexJobRU = copyAndCycle(jobDescriptionsRU, indexJobRU); }
+    function copyJobPrimeRU() { indexJobPrimeRU = copyAndCycle(jobDescriptionsPrimeRU, indexJobPrimeRU); }
+    function copyFlirtRU() { indexFlirtRU = copyAndCycle(flirtClosingsRU, indexFlirtRU); }
+    function copyContactRU() { indexContactRU = copyAndCycle(contactsRU, indexContactRU); }
 
     function createResponsiveTable(headers, data) {
-        let html = '<div class="table-container">';
-        
-        // Desktop table
-        html += '<table><thead><tr>';
-        headers.forEach(header => {
-            html += `<th>${header}</th>`;
-        });
+        let html = '<div class="table-container"><table><thead><tr>';
+        headers.forEach(header => { html += `<th>${header}</th>`; });
         html += '</tr></thead><tbody>';
         data.forEach(row => {
             html += '<tr>';
-            row.forEach(cell => {
-                html += `<td>${cell}</td>`;  
-            });
+            row.forEach(cell => { html += `<td>${cell}</td>`; });
             html += '</tr>';
         });
-        html += '</tbody></table>';
-
-        // Mobile card list
-        html += '<div class="responsive-card-list">';
+        html += '</tbody></table><div class="responsive-card-list">';
         data.forEach(row => {
             html += '<div class="data-card">';
             row.forEach((cell, index) => {
-                const label = headers[index];
-                html += `<div class="data-item"><strong>${label}</strong><span>${cell}</span></div>`;
+                html += `<div class="data-item"><strong>${headers[index]}</strong><span>${cell}</span></div>`;
             });
             html += '</div>';
         });
-        html += '</div>';
-
-        html += '</div>';
+        html += '</div></div>';
         return html;
     }
 
+    let currentLang = 'RU';
     function setLanguage(lang){
       currentLang = lang;
-      const infoHeader = document.getElementById('infoHeader');
-      const infoText = document.getElementById('infoText');
       const instructionsDiv = document.getElementById('instructions');
+      document.getElementById('btnENG').classList.toggle('active', lang === 'ENG');
+      document.getElementById('btnRU').classList.toggle('active', lang === 'RU');
 
       if(lang === 'ENG'){
-        document.getElementById('btnENG').classList.add('active');
-        document.getElementById('btnRU').classList.remove('active');
-        infoHeader.textContent = "About this tool";
-        infoText.textContent = "This panel allows you to quickly copy professional greetings, job descriptions, test assignments, and contacts for ChaterLab. Click any button to copy the text to your clipboard.";
+        document.getElementById('infoHeader').textContent = "About this tool";
+        document.getElementById('infoText').textContent = "This panel allows you to quickly copy professional greetings, job descriptions, test assignments, and contacts for ChaterLab.";
         const jobDescHeaders = ["Location", "Experience", "Schedule", "Button"];
         const jobDescData = [
             ["Kazakhstan", "Basic / No experience", "08:00–16:00, 16:00–00:00, 00:00–08:00", "Job Description (ENG)"],
-            ["Kazakhstan", "Prime experience", "14:00–22:00, 22:00–06:00", "Job Description. With Prime experience (ENG)"]
+            ["Kazakhstan", "Prime experience", "14:00–22:00, 22:00–06:00", "Job Description. Prime (ENG)"]
         ];
         const contactHeaders = ["Location", "Contacts"];
         const contactData = [
@@ -649,22 +612,19 @@
             ["Kazakhstan (Prime)", "Telegram: @kruzhkov"]
         ];
         instructionsDiv.innerHTML = `
-          <h3>📖 Instruction</h3>
-          <div class="step"><h4>1️⃣ Candidate Greeting</h4><ul><li>Russian audience → <b>Приветствие (RU)</b></li><li>English audience → <b>Greeting (ENG)</b></li></ul></div>
-          <div class="step"><h4>2️⃣ Job Description</h4><ul><li>Russian audience → <b>Описание вакансии (RU)</b></li><li>English audience → <b>Job Description (ENG)</b></li></ul>${createResponsiveTable(jobDescHeaders, jobDescData)}</div>
-          <div class="step"><h4>3️⃣ Test Assignment</h4><ul><li>Russian audience → <b>Флирт-задание (RU)</b></li><li>English audience → <b>Flirt Closing (ENG)</b></li></ul></div>
-          <div class="step"><h4>4️⃣ Handling Applications & Documentation</h4><ol><li>All applications are logged in the <b>LEADS</b> sheet.</li><li>After completing the test and choosing a schedule → provide the manager contact.</li><li>Send in the work Telegram group:<ul><li>Screenshot of the completed test</li><li>Below it: candidate contacts, schedule, assigned manager</li></ul></li><li>Documentation in Google Sheets:<ul><li>Philippines → <b>Chathouse Philippines</b></li><li>Kazakhstan → <b>Chathouse</b></li><li>Tab: <b>Interns</b></li><li>Fill: Date, Candidate contact, Schedule, Manager</li><li>Status → "assigned to admin"</li></ul></li></ol></div>
-          <div class="step"><h4>5️⃣ Manager Contacts</h4>${createResponsiveTable(contactHeaders, contactData)}</div>
-        `;
+          <h3>📖 Instructions</h3>
+          <div class="step"><h4><span class="step-number">1</span>Candidate Greeting</h4><ul><li>Russian audience → <b>Приветствие (RU)</b></li><li>English audience → <b>Greeting (ENG)</b></li></ul></div>
+          <div class="step"><h4><span class="step-number">2</span>Job Description</h4>${createResponsiveTable(jobDescHeaders, jobDescData)}</div>
+          <div class="step"><h4><span class="step-number">3</span>Test Assignment</h4><ul><li>Russian audience → <b>Флирт-задание (RU)</b></li><li>English audience → <b>Flirt Closing (ENG)</b></li></ul></div>
+          <div class="step"><h4><span class="step-number">4</span>Application Handling</h4><ol><li>Log all applications in the <code>LEADS</code> sheet.</li><li>After test completion, provide manager's contact.</li><li>Documentation in Google Sheets (Tab: <code>Interns</code>)</li></ol></div>
+          <div class="step"><h4><span class="step-number">5</span>Manager Contacts</h4>${createResponsiveTable(contactHeaders, contactData)}</div>`;
       } else {
-        document.getElementById('btnENG').classList.remove('active');
-        document.getElementById('btnRU').classList.add('active');
-        infoHeader.textContent = "О панели";
-        infoText.textContent = "Эта панель позволяет быстро копировать профессиональные приветствия, описание вакансии, тестовое задание и контакты для ChaterLab. Нажмите любую кнопку, чтобы скопировать текст в буфер обмена.";
+        document.getElementById('infoHeader').textContent = "Об этой панели";
+        document.getElementById('infoText').textContent = "Эта панель позволяет быстро копировать профессиональные приветствия, описания вакансий, тестовые задания и контакты для ChaterLab.";
         const jobDescHeaders = ["Локация", "Опыт", "График", "Кнопка"];
         const jobDescData = [
             ["Казахстан", "Без опыта / базовый", "08:00–16:00, 16:00–00:00, 00:00–08:00", "Описание вакансии (RU)"],
-            ["Казахстан", "Опыт Прайма", "14:00–22:00, 22:00–06:00", "Описание вакансии. С опытом Прайма (RU)"]
+            ["Казахстан", "Опыт Прайма", "14:00–22:00, 22:00–06:00", "Описание вакансии. Прайм (RU)"]
         ];
         const contactHeaders = ["Локация", "Контакты"];
         const contactData = [
@@ -673,12 +633,11 @@
         ];
         instructionsDiv.innerHTML = `
           <h3>📖 Инструкция для работы</h3>
-          <div class="step"><h4>1️⃣ Приветствие кандидата</h4><ul><li>Русскоязычная аудитория → <b>Приветствие (RU)</b></li><li>Англоязычная аудитория → <b>Greeting (ENG)</b></li></ul></div>
-          <div class="step"><h4>2️⃣ Описание вакансии</h4><ul><li>Русскоязычная аудитория → <b>Описание вакансии (RU)</b></li><li>Англоязычная аудитория → <b>Job Description (ENG)</b></li></ul>${createResponsiveTable(jobDescHeaders, jobDescData)}</div>
-          <div class="step"><h4>3️⃣ Тестовое задание</h4><ul><li>Русскоязычная аудитория → <b>Флирт-задание (RU)</b></li><li>Англоязычная аудитория → <b>Flirt Closing (ENG)</b></li></ul></div>
-          <div class="step"><h4>4️⃣ Работа с заявками и документацией</h4><ol><li>Все заявки фиксируются в таблице <b>ЛИДЫ</b>.</li><li>После выполнения теста и выбора графика → выдаём контакт менеджера.</li><li>Отправляем в рабочую Telegram-группу:<ul><li>Скрин выполненного теста</li><li>Подпись: контакты кандидата, график, контакт менеджера</li></ul></li><li>Документация в Google Sheets:<ul><li>Филиппины → <b>Chathouse Philippines</b></li><li>Казахстан → <b>Chathouse</b></li><li>Вкладка: <b>Стажёры</b></li><li>Заполняем: Дата, Контакт, График, Менеджер</li><li>Статус → «передан админу»</li></ul></li></ol></div>
-          <div class="step"><h4>5️⃣ Контакты менеджеров</h4>${createResponsiveTable(contactHeaders, contactData)}</div>
-        `;
+          <div class="step"><h4><span class="step-number">1</span>Приветствие кандидата</h4><ul><li>Русскоязычная аудитория → <b>Приветствие (RU)</b></li><li>Англоязычная аудитория → <b>Greeting (ENG)</b></li></ul></div>
+          <div class="step"><h4><span class="step-number">2</span>Описание вакансии</h4>${createResponsiveTable(jobDescHeaders, jobDescData)}</div>
+          <div class="step"><h4><span class="step-number">3</span>Тестовое задание</h4><ul><li>Русскоязычная аудитория → <b>Флирт-задание (RU)</b></li><li>Англоязычная аудитория → <b>Flirt Closing (ENG)</b></li></ul></div>
+          <div class="step"><h4><span class="step-number">4</span>Работа с заявками</h4><ol><li>Все заявки фиксируются в таблице <code>ЛИДЫ</code>.</li><li>После выполнения теста и выбора графика → выдаём контакт менеджера.</li><li>Документация в Google Sheets (Вкладка: <code>Стажёры</code>)</li><li>Статус → <code>«передан админу»</code></li></ol></div>
+          <div class="step"><h4><span class="step-number">5</span>Контакты менеджеров</h4>${createResponsiveTable(contactHeaders, contactData)}</div>`;
       }
     }
     
@@ -688,45 +647,30 @@
         const btnButtons = document.getElementById('switchButtons');
         const btnInstructions = document.getElementById('switchInstructions');
         
-        const isMobile = window.matchMedia("(max-width: 768px)").matches;
-
-        if (!isMobile) {
-            sidebar.style.display = 'block';  
-            info.style.display = 'block';  
-            return;
+        if (!window.matchMedia("(max-width: 768px)").matches) {
+            sidebar.style.display = 'flex'; info.style.display = 'block'; return;
         }
 
-        if (view === 'buttons') {
-            sidebar.style.display = 'block';
-            info.style.display = 'none';
-            btnButtons.classList.add('active');
-            btnInstructions.classList.remove('active');
-        } else if (view === 'instructions') {
-            sidebar.style.display = 'none';
-            info.style.display = 'block';
-            btnButtons.classList.remove('active');
-            btnInstructions.classList.add('active');
-        }
+        const isButtonsView = view === 'buttons';
+        sidebar.style.display = isButtonsView ? 'flex' : 'none';
+        info.style.display = isButtonsView ? 'none' : 'block';
+        btnButtons.classList.toggle('active', isButtonsView);
+        btnInstructions.classList.toggle('active', !isButtonsView);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const loggedIn = checkLogin(); 
-
+        const loggedIn = checkLogin();
         document.getElementById('login-form').addEventListener('submit', handleLogin);
-        
         if (loggedIn) {
-            setLanguage('ENG'); 
+            setLanguage('RU');
             toggleMobileView('buttons');
         }
     });
 
     window.addEventListener('resize', () => {
-        // Reset view on resize to desktop to ensure both panels are visible
         if (!window.matchMedia("(max-width: 768px)").matches) {
-            const sidebar = document.getElementById('sidebarBlock');
-            const info = document.getElementById('infoBlock');
-            sidebar.style.display = 'block';
-            info.style.display = 'block';
+            document.getElementById('sidebarBlock').style.display = 'flex';
+            document.getElementById('infoBlock').style.display = 'block';
         }
     });
   </script>
