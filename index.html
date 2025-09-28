@@ -100,22 +100,44 @@
         .instructions table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; } 
         .instructions table th, .instructions table td { border: 1px solid var(--border-color); padding: 10px 12px; font-size: 14px; text-align: left; } 
         .instructions table th { background: var(--light-blue-bg); font-weight: 500; } 
+        
+        /* Мобильный переключатель (по умолчанию скрыт на десктопе) */
+        .mobile-switcher { display: none; background-color: var(--background-card); border-bottom: 1px solid var(--border-color); padding: 0 10px; text-align: center; } 
+        .mobile-switcher-inner { display: flex; } 
+        .mobile-switcher button { flex: 1; padding: 14px 0; border: none; border-bottom: 3px solid transparent; background-color: transparent; font-size: 15px; cursor: pointer; font-weight: 600; color: var(--text-secondary); transition: all 0.25s ease; } 
+        .mobile-switcher button.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); } 
 
         /* Адаптивные стили */
         @media (max-width: 768px) {
             header { font-size: 20px; padding: 15px; } 
             main { flex-direction: column; } 
             
-            /* FIX: Мобильный переключатель должен быть виден */
+            /* FIX: Мобильный переключатель теперь отображается на мобильных */
             .mobile-switcher { 
-                display: flex; /* Ключевое исправление */
+                display: flex; 
                 justify-content: space-between; 
                 align-items: center; 
             } 
-            .sidebar { width: 100%; min-width: unset; padding: 15px; border-right: none; border-bottom: 1px solid var(--border-color); } 
-            .info { padding: 20px 15px; display: none; } 
             
-            /* Адаптивные стили для таблиц (ключ для оптимизации) */
+            /* Скрываем/показываем блоки в зависимости от активного класса на main */
+            .sidebar, .info {
+                width: 100%;
+                min-width: unset;
+                padding: 15px; 
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                display: none; /* По умолчанию оба скрыты на мобильном, управляются JS */
+            }
+
+            /* Контейнер main управляет тем, что видно */
+            main.sidebar-visible .sidebar {
+                display: flex;
+            }
+            main.info-visible .info {
+                display: block;
+            }
+            
+            /* Адаптивные стили для таблиц */
             .instructions table { display: block; border: none; }
             .instructions table thead, .instructions table tr:first-child { display: none; }
             .instructions table tr { display: block; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--background-card); }
@@ -131,10 +153,6 @@
             }
         } 
 
-        .mobile-switcher { display: none; background-color: var(--background-card); border-bottom: 1px solid var(--border-color); padding: 0 10px; text-align: center; } 
-        .mobile-switcher-inner { display: flex; } 
-        .mobile-switcher button { flex: 1; padding: 14px 0; border: none; border-bottom: 3px solid transparent; background-color: transparent; font-size: 15px; cursor: pointer; font-weight: 600; color: var(--text-secondary); transition: all 0.25s ease; } 
-        .mobile-switcher button.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); } 
         
         .toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--success-color); color: white; padding: 12px 20px; border-radius: 10px; opacity: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: all 0.3s ease-in-out; z-index: 1000; font-size: 15px; font-weight: 500; pointer-events: none; white-space: nowrap; } 
         .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); } 
@@ -204,8 +222,8 @@
         
         <div class="mobile-switcher" id="mobileSwitcher"> 
             <div class="mobile-switcher-inner"> 
-                <button id="switchButtons" class="active" onclick="toggleMobileView('buttons')" data-key="repliesTab">Ответы</button> 
-                <button id="switchInstructions" onclick="toggleMobileView('instructions')" data-key="instructionsTab">Инструкция</button> 
+                <button id="switchButtons" class="active" onclick="toggleMobileView('buttons')">Ответы</button> 
+                <button id="switchInstructions" onclick="toggleMobileView('instructions')">Инструкция</button> 
             </div> 
         </div> 
 
@@ -687,8 +705,7 @@
         // MOBILE VIEW TOGGLE
         // ===================================================================================
         function toggleMobileView(view) {
-            const sidebar = document.getElementById('sidebarBlock');
-            const info = document.getElementById('infoBlock');
+            const main = document.querySelector('main');
             const switchButtons = document.getElementById('switchButtons');
             const switchInstructions = document.getElementById('switchInstructions');
 
@@ -696,22 +713,19 @@
 
             if (isMobile) {
                 if (view === 'buttons') {
-                    // Кнопки: Показать сайдбар (как flex), скрыть инструкцию
-                    sidebar.style.display = 'flex';
-                    info.style.display = 'none';
+                    main.classList.add('sidebar-visible');
+                    main.classList.remove('info-visible');
                     if (switchButtons) switchButtons.classList.add('active');
                     if (switchInstructions) switchInstructions.classList.remove('active');
                 } else if (view === 'instructions') {
-                    // Инструкции: Скрыть сайдбар, показать инструкцию
-                    sidebar.style.display = 'none';
-                    info.style.display = 'block';
+                    main.classList.add('info-visible');
+                    main.classList.remove('sidebar-visible');
                     if (switchInstructions) switchInstructions.classList.add('active');
                     if (switchButtons) switchButtons.classList.remove('active');
                 }
             } else {
-                // На десктопе: Всегда показать оба
-                sidebar.style.display = 'flex';
-                info.style.display = 'block';
+                // На десктопе: сбрасываем классы, чтобы показать оба блока
+                main.classList.remove('sidebar-visible', 'info-visible');
                 // Снять активность с мобильных переключателей
                 if (switchButtons) switchButtons.classList.remove('active');
                 if (switchInstructions) switchInstructions.classList.remove('active');
@@ -742,7 +756,9 @@
         function copyContactUK() { copyAndCycle('uk', 'contacts', 'btn-contact-uk'); }
         
         window.addEventListener('resize', () => {
-             const activeView = document.getElementById('infoBlock').style.display === 'block' && window.innerWidth <= 768 ? 'instructions' : 'buttons';
+             // При изменении размера экрана перепроверяем и устанавливаем корректный вид
+             const main = document.querySelector('main');
+             const activeView = main.classList.contains('info-visible') ? 'instructions' : 'buttons';
              toggleMobileView(activeView);
         });
         
