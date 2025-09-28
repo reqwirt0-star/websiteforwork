@@ -182,7 +182,8 @@
                 font-size: 15px; 
                 text-align: right; 
                 position: relative;
-                word-break: break-word; 
+                /* FIX: Принудительный перенос длинных строк, типа контактов/URL */
+                word-break: break-all;
             }
             .instructions table td::before {
                 content: attr(data-label);
@@ -459,7 +460,7 @@
                 
                 const overlay = document.getElementById('animation-overlay');
                 overlay.style.display = 'flex';
-                overlay.classList.add('animate');
+                overlay.classList.add('animate'); // FIX: Запускаем анимацию
 
                 setTimeout(() => {
                     overlay.style.display = 'none';
