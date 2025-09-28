@@ -44,7 +44,9 @@
         } 
         
         .login-active { overflow: hidden; height: 100vh; } 
-        #app-container { display: none; flex-direction: column; min-height: 100vh; opacity: 0; transition: opacity 0.5s ease-in-out; } 
+        /* FIX: Убрана display: none; чтобы элементы внутри могли быть видны */
+        #app-container { flex-direction: column; min-height: 100vh; opacity: 0; transition: opacity 0.5s ease-in-out; } 
+        #app-container:not([data-logged="true"]) { display: none; }
 
         #animation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--background-main); display: none; justify-content: center; align-items: center; z-index: 3000; } 
         .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; opacity: 0; } 
@@ -104,7 +106,9 @@
         @media (max-width: 768px) {
             header { font-size: 20px; padding: 15px; } 
             main { flex-direction: column; } 
-            .mobile-switcher { display: block; } 
+            
+            /* FIX: Мобильный переключатель должен быть виден, когда #app-container виден */
+            .mobile-switcher { display: flex; } 
             .sidebar { width: 100%; min-width: unset; padding: 15px; border-right: none; border-bottom: 1px solid var(--border-color); } 
             .info { padding: 20px 15px; display: none; } 
             
@@ -117,7 +121,7 @@
                 content: attr(data-label);
                 position: absolute;
                 left: 10px;
-                width: 50%; /* Увеличил ширину метки для лучшего вида */
+                width: 50%; 
                 text-align: left;
                 font-weight: 600;
                 color: var(--primary-blue);
@@ -192,7 +196,7 @@
         </div> 
     </div> 
 
-    <div id="app-container"> 
+    <div id="app-container" data-logged="false"> 
         <header data-key="appHeader">ChaterLab Quick Replies</header> 
         
         <div class="mobile-switcher" id="mobileSwitcher"> 
@@ -356,13 +360,13 @@
             if (loggedIn) {
                 loginScreen.style.display = 'none';
                 document.body.classList.remove('login-active');
-                appContainer.style.display = 'flex';
+                appContainer.setAttribute('data-logged', 'true'); // Установка атрибута для CSS
                 appContainer.style.opacity = '1';
                 return true;
             } else {
                 loginScreen.style.display = 'flex';
                 document.body.classList.add('login-active');
-                appContainer.style.display = 'none';
+                appContainer.setAttribute('data-logged', 'false');
                 appContainer.style.opacity = '0';
                 return false;
             }
@@ -394,6 +398,7 @@
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     document.getElementById('app-container').style.display = 'flex';
+                    document.getElementById('app-container').setAttribute('data-logged', 'true');
                     document.getElementById('app-container').style.opacity = '1';
                     toggleMobileView('buttons'); 
                 }, 2500); 
@@ -412,7 +417,7 @@
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
             document.getElementById('app-container').style.opacity = '0';
-            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('app-container').setAttribute('data-logged', 'false');
             
             document.getElementById('login-screen').style.display = 'flex';
             document.body.classList.add('login-active');
@@ -440,7 +445,7 @@
         } 
         
         /**
-         * Обновленная функция для генерации инструкции (с использованием i18n для заголовков, но фиксированным контентом)
+         * Функция для генерации инструкции 
          */
         function updateInstructions(lang) {
             const instructionsDiv = document.getElementById('instructions');
@@ -458,25 +463,11 @@
             const isEnglish = lang === 'en';
             const isUkrainian = lang === 'uk';
             
-            // Определяем язык для отображения в инструкции
-            let ruText, enText, ukText;
-            if (isEnglish) {
-                ruText = 'Russian audience';
-                enText = 'English audience';
-                ukText = 'Ukrainian audience';
-            } else if (isUkrainian) {
-                ruText = 'Російськомовна аудиторія';
-                enText = 'Англомовна аудиторія';
-                ukText = 'Україномовна аудиторія';
-            } else { // ru
-                ruText = 'Русскоязычная аудитория';
-                enText = 'Англоязычная аудитория';
-                ukText = 'Украиноязычная аудитория';
-            }
-            
-            // Используем локализованные заголовки
+            // Определяем локализованные тексты
             const loc = (key) => appData.i18n[lang][key] || key;
-
+            const ruText = isEnglish ? 'Russian audience' : (isUkrainian ? 'Російськомовна аудиторія' : 'Русскоязычная аудитория');
+            const enText = isEnglish ? 'English audience' : (isUkrainian ? 'Англомовна аудиторія' : 'Англоязычная аудитория');
+            
 
             content = `
                 <h3 data-key="instructionHeader">${loc('instructionHeader')}</h3>
@@ -580,7 +571,12 @@
         function copyAndCycle(lang, type, buttonId) { 
             // Проверяем, существует ли контент для данного языка и типа, прежде чем пытаться скопировать
             if (!appData.templates[lang] || !appData.templates[lang][type]) {
-                showToast(`Error: Content for ${lang} not found.`);
+                // Если нет шаблонов для UK, выводим ошибку, если пытались скопировать UK
+                if (lang === 'uk') {
+                     showToast('Error: UK copy buttons are disabled.');
+                } else {
+                     showToast(`Error: Content for ${lang} not found.`);
+                }
                 return;
             }
 
@@ -733,8 +729,14 @@
         function copyFlirtRU() { copyAndCycle('ru', 'flirtClosings', 'btn-flirt-ru'); }
         function copyContactRU() { copyAndCycle('ru', 'contacts', 'btn-contact-ru'); }
         
+        // UK функции пусты, так как кнопок нет, но их присутствие может предотвратить ошибки, если они остались в старых шаблонах
+        function copyGreetingUK() { copyAndCycle('uk', 'greetings', 'btn-greeting-uk'); }
+        function copyJobUK() { copyAndCycle('uk', 'jobDescriptions', 'btn-job-uk'); }
+        function copyJobPrimeUK() { copyAndCycle('uk', 'jobDescriptionsPrime', 'btn-jobprime-uk'); }
+        function copyFlirtUK() { copyAndCycle('uk', 'flirtClosings', 'btn-flirt-uk'); }
+        function copyContactUK() { copyAndCycle('uk', 'contacts', 'btn-contact-uk'); }
+        
         window.addEventListener('resize', () => {
-             // Определяем текущий активный вид, чтобы вернуться к нему при ресайзе
              const activeView = document.getElementById('infoBlock').style.display === 'block' && window.innerWidth <= 768 ? 'instructions' : 'buttons';
              toggleMobileView(activeView);
         });
