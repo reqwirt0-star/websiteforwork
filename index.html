@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"> 
     <style> 
+        /* Ваши оригинальные стили, адаптированные под темную тему */
         :root { 
             --primary-blue: #007aff; 
             --primary-blue-hover: #005ecb; 
@@ -83,20 +84,38 @@
         .info p { font-size: 16px; line-height: 1.6; margin-bottom: 25px; color: var(--text-secondary); } 
         .toggle { display: inline-flex; background-color: var(--border-color); border-radius: 9px; padding: 4px; margin-bottom: 25px; transition: background-color 0.3s; } 
         .toggle button { padding: 6px 16px; border: none; background: transparent; cursor: pointer; font-size: 14px; font-weight: 500; border-radius: 7px; margin: 0; color: var(--text-secondary); transition: all 0.25s ease; } 
-        .toggle button.active { background: var(--background-card); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.08); } 
+        .toggle button.active { background: var(--background-card); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-color), 0 1px 4px rgba(0,0,0,0.08); } 
+        
+        /* Стили для инструкции, адаптированные под общую тему */
         .instructions { margin-top: 40px; } 
         .step { background: var(--background-card); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; } 
-        .step h4 { margin: 0 0 15px; font-size: 18px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 12px; } 
+        .step h4 { margin: 0 0 15px; font-size: 18px; font-weight: 600; color: var(--primary-blue); display: flex; align-items: center; gap: 12px; } 
         .step-number { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background-color: var(--light-blue-bg); color: var(--primary-blue); border-radius: 50%; font-size: 14px; font-weight: 600; flex-shrink: 0; } 
         .step ul, .step ol { padding-left: 20px; margin: 10px 0; color: var(--text-secondary); line-height: 1.7; } 
         .step ul li::marker, .step ol li::marker { font-weight: 500; } 
-        code { background-color: var(--light-blue-bg); color: var(--primary-blue-hover); padding: 3px 6px; border-radius: 6px; font-size: 0.9em; font-family: 'SF Mono', 'Menlo', monospace; } 
+        .step li strong { color: var(--text-primary); }
         
-        .table-container { overflow-x: auto; } 
-        .instructions table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; display: table; } 
-        .instructions table th, .instructions table td { border: 1px solid var(--border-color); padding: 10px 12px; font-size: 14px; } 
-        .instructions table th { background: var(--light-blue-bg); text-align: left; font-weight: 500; } 
-        .instructions .responsive-card-list { display: none; } 
+        /* Стили для таблиц */
+        .instructions table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; } 
+        .instructions table th, .instructions table td { border: 1px solid var(--border-color); padding: 10px 12px; font-size: 14px; text-align: left; } 
+        .instructions table th { background: var(--light-blue-bg); font-weight: 500; } 
+
+        /* Адаптивные стили для таблиц */
+        @media (max-width: 768px) {
+            .instructions table { display: block; border: none; }
+            .instructions table thead, .instructions table tr:first-child { display: none; }
+            .instructions table tr { display: block; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--background-card); }
+            .instructions table td { display: block; border: none; padding: 8px 10px; font-size: 15px; text-align: right; position: relative; }
+            .instructions table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                text-align: left;
+                font-weight: 600;
+                color: var(--primary-blue);
+            }
+        }
         
         .mobile-switcher { display: none; background-color: var(--background-card); border-bottom: 1px solid var(--border-color); padding: 0 10px; text-align: center; } 
         .mobile-switcher-inner { display: flex; } 
@@ -146,14 +165,8 @@
             .mobile-switcher { display: block; } 
             .sidebar { width: 100%; min-width: unset; padding: 15px; border-right: none; border-bottom: 1px solid var(--border-color); } 
             .info { padding: 20px 15px; } 
-            .instructions table { display: none; } 
-            .instructions .responsive-card-list { display: block; width: 100%; margin-top: 15px; } 
-            .data-card { background-color: var(--background-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 15px; } 
-            .data-item { font-size: 15px; line-height: 1.5; } 
-            .data-item:not(:last-child) { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f2; } 
-            body.dark-mode .data-item:not(:last-child) { border-bottom-color: #38383a; } 
-            .data-item strong { color: var(--text-primary); display: block; margin-bottom: 5px; font-weight: 500; } 
-            .data-item span { color: var(--text-secondary); } 
+            /* На мобильных info скрыт по умолчанию */
+            .info { display: none; }
         } 
     </style> 
 </head> 
@@ -214,6 +227,15 @@
                         <button id="btn-flirt-ru" onclick="copyFlirtRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="flirtButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-flirt-ru')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
                         <button id="btn-contact-ru" onclick="copyContactRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="contactButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-contact-ru')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
                     </div> 
+
+                    <div class="sidebar-section" id="uk-section"> 
+                        <h2 data-key="ukrainianSection">Українська</h2> 
+                        <button id="btn-greeting-uk" onclick="copyGreetingUK()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="greetingButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-greeting-uk')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
+                        <button id="btn-job-uk" onclick="copyJobUK()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="jobDescButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-job-uk')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
+                        <button id="btn-jobprime-uk" onclick="copyJobPrimeUK()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="jobPrimeButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-jobprime-uk')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
+                        <button id="btn-flirt-uk" onclick="copyFlirtUK()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="flirtButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-flirt-uk')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
+                        <button id="btn-contact-uk" onclick="copyContactUK()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="contactButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-contact-uk')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
+                    </div> 
                 </div> 
                 
                 <div class="sidebar-footer"> 
@@ -252,23 +274,23 @@
         const appData = { 
             credentials: [
                 { username: 'admin', password: 'admin' },
-                { username: 'manager', password: 'manager' } // Добавлена учетная запись сотрудника
+                { username: 'manager', password: 'manager' } // Учетная запись сотрудника
             ], 
             i18n: { 
                 en: { 
                     loginHeader: "ChaterLab", loginSubheader: "Quick Replies Panel", loginPlaceholder: "Login", passwordPlaceholder: "Password", loginButton: "Log In", 
                     appHeader: "ChaterLab Quick Replies", repliesTab: "Replies", instructionsTab: "Instructions", 
-                    englishSection: "English Content", russianSection: "Russian Content", logoutButtonText: "Log Out", 
-                    aboutHeader: "About this tool", aboutText: "This panel allows you to quickly copy professional greetings, job descriptions, test assignments, and contacts for ChaterLab.", 
-                    instructionHeader: "📖 Instructions", errorInvalid: "Invalid credentials. Please contact your manager.", 
+                    englishSection: "English Content", russianSection: "Russian Content", ukrainianSection: "Ukrainian Content", logoutButtonText: "Log Out", 
+                    aboutHeader: "About this tool", aboutText: "This panel allows you to quickly copy professional greetings, job descriptions, test assignments, and contacts for ChaterLab. Click any button to copy the text to your clipboard.", 
+                    instructionHeader: "📖 Instruction", errorInvalid: "Invalid credentials. Please contact your manager.", 
                     toastMessage: "Copied", searchPlaceholder: "Search...", darkModeLabel: "Dark Mode", 
                     greetingButtonLabel: "Greeting", jobDescButtonLabel: "Job Description", jobPrimeButtonLabel: "Job Description (Prime)", flirtButtonLabel: "Flirt Task", contactButtonLabel: "Contact", 
                 }, 
                 ru: { 
                     loginHeader: "ChaterLab", loginSubheader: "Панель быстрых ответов", loginPlaceholder: "Логин", passwordPlaceholder: "Пароль", loginButton: "Войти", 
                     appHeader: "ChaterLab Quick Replies", repliesTab: "Ответы", instructionsTab: "Инструкция", 
-                    englishSection: "Английский контент", russianSection: "Русский контент", logoutButtonText: "Выйти", 
-                    aboutHeader: "О панели", aboutText: "Эта панель позволяет быстро копировать профессиональные приветствия, описание вакансии, тестовое задание и контакты для ChaterLab.", 
+                    englishSection: "Английский контент", russianSection: "Русский контент", ukrainianSection: "Украинский контент", logoutButtonText: "Выйти", 
+                    aboutHeader: "О панели", aboutText: "Эта панель позволяет быстро копировать профессиональные приветствия, описание вакансии, тестовое задание и контакты для ChaterLab. Нажмите любую кнопку, чтобы скопировать текст в буфер обмена.", 
                     instructionHeader: "📖 Инструкция для работы", errorInvalid: "Неверные данные. Свяжитесь с менеджером.", 
                     toastMessage: "Скопировано", searchPlaceholder: "Поиск...", darkModeLabel: "Тёмная тема", 
                     greetingButtonLabel: "Приветствие", jobDescButtonLabel: "Описание вакансии", jobPrimeButtonLabel: "Описание вакансии (Прайм)", flirtButtonLabel: "Флирт-задание", contactButtonLabel: "Контакт", 
@@ -276,8 +298,8 @@
                 uk: { 
                     loginHeader: "ChaterLab", loginSubheader: "Панель швидких відповідей", loginPlaceholder: "Логін", passwordPlaceholder: "Пароль", loginButton: "Увійти", 
                     appHeader: "ChaterLab Quick Replies", repliesTab: "Відповіді", instructionsTab: "Інструкція", 
-                    englishSection: "Англійський контент", russianSection: "Російський контент", logoutButtonText: "Вийти", 
-                    aboutHeader: "Про панель", aboutText: "Ця панель дозволяє швидко копіювати професійні привітання, опис вакансії, тестове завдання та контакти для ChaterLab.", 
+                    englishSection: "Англійський контент", russianSection: "Російський контент", ukrainianSection: "Український контент", logoutButtonText: "Вийти", 
+                    aboutHeader: "Про панель", aboutText: "Ця панель дозволяє швидко копіювати професійні привітання, опис вакансії, тестове завдання та контакти для ChaterLab. Натисніть будь-яку кнопку, щоб скопіювати текст у буфер обміну.", 
                     instructionHeader: "📖 Інструкція для роботи", errorInvalid: "Невірні дані. Зв'яжіться з менеджером.", 
                     toastMessage: "Скопійовано", searchPlaceholder: "Пошук...", darkModeLabel: "Темна тема", 
                     greetingButtonLabel: "Привітання", jobDescButtonLabel: "Опис вакансії", jobPrimeButtonLabel: "Опис вакансії (Прайм)", flirtButtonLabel: "Флірт-завдання", contactButtonLabel: "Контакт", 
@@ -285,23 +307,23 @@
             }, 
             templates: { 
                 en: { 
-                    greetings: [ "Good day! We are ChaterLab...", "Hello! This is ChaterLab..." ], 
-                    jobDescriptions: [ `Job Description:\n📌 Task:...`, `Vacancy: Chat Operator...` ], 
+                    greetings: [ "Good day! We are ChaterLab. Do you have experience...", "Hello! This is ChaterLab..." ], 
+                    jobDescriptions: [ `Job Description:\n📌 Task:...\nWhich shift suits you?`, `Vacancy: Chat Operator...` ], 
+                    jobDescriptionsPrime: [ `Job Description (Prime):\n📌 Task:...` ],
                     flirtClosings: [ "Please create 10 unique phrases...", "As a test, please write 10 creative lines..." ], 
                     contacts: [ "Thank you for completing the test...", "Great job on the test!..." ] 
                 }, 
                 ru: { 
                     greetings: [ "Добрый день! Мы компания ChaterLab...", "Здравствуйте! Это ChaterLab..." ], 
-                    jobDescriptions: [ `Описание вакансии:\n📌 Задача:...`, `Вакансия: Оператор чата...` ], 
-                    jobDescriptionsPrime: [ `Описание вакансии (Прайм):\n📌 Задача:...` ], 
+                    jobDescriptions: [ `Описание вакансии:\n📌 Задача:...\nКакой график вам подходит?`, `Вакансия: Оператор чата...` ], 
+                    jobDescriptionsPrime: [ `Описание вакансии (Прайм):\n📌 Задача:...\nКакой график вам подходит?` ], 
                     flirtClosings: [ "Пожалуйста, составьте 10 уникальных фраз...", "В качестве теста, напишите 10 креативных фраз..." ], 
                     contacts: [ "Благодарим за выполненное тестовое...", "Отличная работа! Следующий шаг — связаться..." ] 
                 },
-                // Добавление заглушки для UK, чтобы избежать ошибок
                 uk: {
                     greetings: ["Доброго дня! Ми ChaterLab...", "Привіт! Це ChaterLab..."],
-                    jobDescriptions: [`Опис вакансії:\n📌 Завдання:...`, `Вакансія: Оператор чату...`],
-                    jobDescriptionsPrime: [`Опис вакансії (Прайм):\n📌 Завдання:...`],
+                    jobDescriptions: [`Опис вакансії:\n📌 Завдання:...\nЯкий графік вам підходить?`, `Вакансія: Оператор чату...`],
+                    jobDescriptionsPrime: [`Опис вакансії (Прайм):\n📌 Завдання:...\nЯкий графік вам підходить?`],
                     flirtClosings: ["Будь ласка, складіть 10 унікальних фраз...", "Як тест, напишіть 10 креативних фраз..."],
                     contacts: ["Дякуємо за виконане тестове...", "Чудова робота! Наступний крок — зв'язатися..."]
                 }
@@ -336,6 +358,7 @@
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate(50);
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 1500);
@@ -383,7 +406,6 @@
                 document.body.classList.remove('login-active');
                 document.getElementById('login-screen').style.display = 'none';
                 
-                // Запуск анимации
                 const overlay = document.getElementById('animation-overlay');
                 overlay.style.display = 'flex';
                 overlay.classList.add('animate');
@@ -406,13 +428,11 @@
 
         function logout() { 
             setLocalStorage('chaterlabLoggedIn', false);
-            // Очистка полей ввода и скрытие приложения
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
             document.getElementById('app-container').style.opacity = '0';
             document.getElementById('app-container').style.display = 'none';
             
-            // Показать экран входа
             document.getElementById('login-screen').style.display = 'flex';
             document.body.classList.add('login-active');
         } 
@@ -438,37 +458,302 @@
             updateInstructions(lang); 
         } 
         
-        // Заглушка для заполнения инструкции
+        /**
+         * ВОССТАНОВЛЕННАЯ ФУНКЦИЯ ДЛЯ ГЕНЕРАЦИИ ИНСТРУКЦИИ
+         */
         function updateInstructions(lang) {
             const instructionsDiv = document.getElementById('instructions');
-            const header = document.getElementById('infoHeader');
-            const text = document.getElementById('infoText');
+            const infoHeader = document.getElementById('infoHeader');
+            const infoText = document.getElementById('infoText');
             
-            // Установка заголовка и текста "О панели"
-            header.textContent = appData.i18n[lang].aboutHeader;
-            text.textContent = appData.i18n[lang].aboutText;
-            
-            // Генерация инструкций (используем ru как пример)
             const i18n = appData.i18n[lang];
-            const templates = appData.templates[lang];
 
-            instructionsDiv.innerHTML = `
-                <h3 data-key="instructionHeader">${i18n.instructionHeader}</h3>
-                <div class="step">
-                    <h4 data-key="step1Header"><span class="step-number">1</span> ${i18n.greetingButtonLabel}</h4>
-                    <p>Нажмите на любую кнопку в боковой панели, чтобы скопировать соответствующий шаблон текста. Если для одного типа ответа есть несколько вариантов, при каждом нажатии будет циклически копироваться следующий вариант.</p>
-                </div>
-                <div class="step">
-                    <h4 data-key="step2Header"><span class="step-number">2</span> ${i18n.searchPlaceholder} / ⭐️</h4>
-                    <p>Используйте поле 🔍 <strong>${i18n.searchPlaceholder}</strong> для быстрого поиска. Нажмите на ⭐️ (звездочку), чтобы добавить ответ в Избранное. Избранные ответы отображаются вверху списка.</p>
-                </div>
-                <div class="step">
-                    <h4 data-key="step3Header"><span class="step-number">3</span> ${i18n.darkModeLabel}</h4>
-                    <p>Вы можете переключить тему внизу боковой панели. Ваш выбор будет сохранен.</p>
-                </div>
-            `;
+            // 1. Обновляем header и текст "О панели"
+            infoHeader.textContent = i18n.aboutHeader;
+            infoText.textContent = i18n.aboutText;
+
+            // 2. Генерируем HTML для инструкции в зависимости от языка
+            let content;
+            if (lang === 'en') {
+                content = `
+                    <h3 data-key="instructionHeader">📖 Instruction</h3>
+
+                    <div class="step">
+                        <h4><span class="step-number">1</span> Candidate Greeting</h4>
+                        <ul>
+                            <li>Russian audience → <strong>Приветствие (RU)</strong></li>
+                            <li>English audience → <strong>Greeting (ENG)</strong></li>
+                            <li>Ukrainian audience → <strong>Привітання (UA)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">2</span> Job Description</h4>
+                        <ul>
+                            <li>Russian audience → <strong>Описание вакансии (RU)</strong></li>
+                            <li>English audience → <strong>Job Description (ENG)</strong></li>
+                            <li>Ukrainian audience → <strong>Опис вакансії (UA)</strong></li>
+                        </ul>
+                        <table>
+                            <thead>
+                                <tr><th>Location</th><th>Experience</th><th>Schedule</th><th>Button</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Location">Kazakhstan</td>
+                                    <td data-label="Experience">Basic / No experience</td>
+                                    <td data-label="Schedule">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
+                                    <td data-label="Button">Job Description (ENG) / Описание вакансии (RU)</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Location">Kazakhstan</td>
+                                    <td data-label="Experience">Prime experience</td>
+                                    <td data-label="Schedule">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
+                                    <td data-label="Button">Job Description (Prime) (ENG) / Описание вакансии. С опытом Прайма (RU)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">3</span> Test Assignment</h4>
+                        <ul>
+                            <li>Russian audience → <strong>Флирт-задание (RU)</strong></li>
+                            <li>English audience → <strong>Flirt Closing (ENG)</strong></li>
+                            <li>Ukrainian audience → <strong>Флірт-завдання (UA)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">4</span> Handling Applications & Documentation</h4>
+                        <ol>
+                            <li>All applications are logged in the <strong>LEADS</strong> sheet.</li>
+                            <li>After completing the test and choosing a schedule → provide the manager contact.</li>
+                            <li>Send in the work Telegram group:
+                                <ul>
+                                    <li>Screenshot of the completed test</li>
+                                    <li>Below it: candidate contacts, schedule, assigned manager</li>
+                                </ul>
+                            </li>
+                            <li>Documentation in Google Sheets:
+                                <ul>
+                                    <li>Philippines → <strong>Chathouse Philippines</strong></li>
+                                    <li>Kazakhstan → <strong>Chathouse</strong></li>
+                                    <li>Tab: <strong>Interns</strong></li>
+                                    <li>Fill: Date, Candidate contact, Schedule, Manager</li>
+                                    <li>Status → "assigned to admin"</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">5</span> Manager Contacts</h4>
+                        <table>
+                            <thead>
+                                <tr><th>Location</th><th>Contacts</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Location">Philippines</td>
+                                    <td data-label="Contacts">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Location">Kazakhstan (Prime)</td>
+                                    <td data-label="Contacts">Telegram: @sandra01075 / WhatsApp: -</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (lang === 'uk') {
+                content = `
+                    <h3 data-key="instructionHeader">📖 Інструкція для роботи</h3>
+
+                    <div class="step">
+                        <h4><span class="step-number">1</span> Привітання кандидата</h4>
+                        <ul>
+                            <li>Російськомовна аудиторія → <strong>Приветствие (RU)</strong></li>
+                            <li>Англомовна аудиторія → <strong>Greeting (ENG)</strong></li>
+                            <li>Україномовна аудиторія → <strong>Привітання (UA)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">2</span> Опис вакансії</h4>
+                        <ul>
+                            <li>Російськомовна аудиторія → <strong>Описание вакансии (RU)</strong></li>
+                            <li>Англомовна аудиторія → <strong>Job Description (ENG)</strong></li>
+                            <li>Україномовна аудиторія → <strong>Опис вакансії (UA)</strong></li>
+                        </ul>
+                        <table>
+                            <thead>
+                                <tr><th>Локація</th><th>Досвід</th><th>Графік</th><th>Кнопка</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Локація">Казахстан</td>
+                                    <td data-label="Досвід">Без досвіду / базовий</td>
+                                    <td data-label="Графік">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
+                                    <td data-label="Кнопка">Опис вакансії (UA) / Описание вакансии (RU)</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Локація">Казахстан</td>
+                                    <td data-label="Досвід">Досвід Прайма</td>
+                                    <td data-label="Графік">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
+                                    <td data-label="Кнопка">Опис вакансії (Прайм) (UA) / Описание вакансии. С опытом Прайма (RU)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">3</span> Тестове завдання</h4>
+                        <ul>
+                            <li>Російськомовна аудиторія → <strong>Флирт-задание (RU)</strong></li>
+                            <li>Англомовна аудиторія → <strong>Flirt Closing (ENG)</strong></li>
+                            <li>Україномовна аудиторія → <strong>Флірт-завдання (UA)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">4</span> Робота із заявками та документацією</h4>
+                        <ol>
+                            <li>Усі заявки фіксуються в таблиці <strong>ЛІДИ</strong>.</li>
+                            <li>Після виконання тесту та вибору графіку → видаємо контакт менеджера.</li>
+                            <li>Надсилаємо в робочу Telegram-групу:
+                                <ul>
+                                    <li>Скрін виконаного тесту</li>
+                                    <li>Підпис: контакти кандидата, графік, контакт менеджера</li>
+                                </ul>
+                            </li>
+                            <li>Документація у Google Sheets:
+                                <ul>
+                                    <li>Філіппіни → <strong>Chathouse Philippines</strong></li>
+                                    <li>Казахстан → <strong>Chathouse</strong></li>
+                                    <li>Вкладка: <strong>Стажисти</strong></li>
+                                    <li>Заповнюємо: Дата, Контакт, Графік, Менеджер</li>
+                                    <li>Статус → «передано адміну»</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">5</span> Контакти менеджерів</h4>
+                        <table>
+                            <thead>
+                                <tr><th>Локація</th><th>Контакти</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Локація">Філіппіни</td>
+                                    <td data-label="Контакти">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Локація">Казахстан (досвід Прайма)</td>
+                                    <td data-label="Контакти">Telegram: @sandra01075 / WhatsApp: -</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else { // lang === 'ru' (Русский)
+                content = `
+                    <h3 data-key="instructionHeader">📖 Инструкция для работы</h3>
+
+                    <div class="step">
+                        <h4><span class="step-number">1</span> Приветствие кандидата</h4>
+                        <ul>
+                            <li>Русскоязычная аудитория → <strong>Приветствие (RU)</strong></li>
+                            <li>Англоязычная аудитория → <strong>Greeting (ENG)</strong></li>
+                            <li>Украиноязычная аудитория → <strong>Привітання (UA)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">2</span> Описание вакансии</h4>
+                        <ul>
+                            <li>Русскоязычная аудитория → <strong>Описание вакансии (RU)</strong></li>
+                            <li>Англоязычная аудитория → <strong>Job Description (ENG)</strong></li>
+                            <li>Украиноязычная аудитория → <strong>Опис вакансії (UA)</strong></li>
+                        </ul>
+                        <table>
+                            <thead>
+                                <tr><th>Локация</th><th>Опыт</th><th>График</th><th>Кнопка</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Локация">Казахстан</td>
+                                    <td data-label="Опыт">Без опыта / базовый</td>
+                                    <td data-label="График">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
+                                    <td data-label="Кнопка">Описание вакансии (RU)</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Локация">Казахстан</td>
+                                    <td data-label="Опыт">Опыт Прайма</td>
+                                    <td data-label="График">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
+                                    <td data-label="Кнопка">Описание вакансии. С опытом Прайма (RU)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">3</span> Тестовое задание</h4>
+                        <ul>
+                            <li>Русскоязычная аудитория → <strong>Флирт-задание (RU)</strong></li>
+                            <li>Англоязычная аудитория → <strong>Flirt Closing (ENG)</strong></li>
+                            <li>Украиноязычная аудитория → <strong>Флірт-завдання (UA)</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">4</span> Работа с заявками и документацией</h4>
+                        <ol>
+                            <li>Все заявки фиксируются в таблице <strong>ЛИДЫ</strong>.</li>
+                            <li>После выполнения теста и выбора графика → выдаём контакт менеджера.</li>
+                            <li>Отправляем в рабочую Telegram-группу:
+                                <ul>
+                                    <li>Скрин выполненного теста</li>
+                                    <li>Подпись: контакты кандидата, график, контакт менеджера</li>
+                                </ul>
+                            </li>
+                            <li>Документация в Google Sheets:
+                                <ul>
+                                    <li>Филиппины → <strong>Chathouse Philippines</strong></li>
+                                    <li>Казахстан → <strong>Chathouse</strong></li>
+                                    <li>Вкладка: <strong>Стажёры</strong></li>
+                                    <li>Заполняем: Дата, Контакт, График, Менеджер</li>
+                                    <li>Статус → «передан админу»</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="step">
+                        <h4><span class="step-number">5</span> Контакты менеджеров</h4>
+                        <table>
+                            <thead>
+                                <tr><th>Локация</th><th>Контакты</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Локация">Филиппины</td>
+                                    <td data-label="Контакты">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Локация">Казахстан (опыт Прайма)</td>
+                                    <td data-label="Контакты">Telegram: @sandra01075 / WhatsApp: -</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            instructionsDiv.innerHTML = content;
         }
-        
+
         // =================================================================================== 
         // CORE FUNCTIONALITY: COPY, SEARCH, FAVORITES, STATS 
         // =================================================================================== 
@@ -486,21 +771,28 @@
             
             templateIndexes[lang][type] = (templateIndexes[lang][type] + 1) % templates.length; 
         } 
+        
+        // ... (handleSearch, toggleFavorite, renderFavorites, trackClick, getStats, setupDarkMode - без изменений)
 
         function handleSearch(event) { 
             const query = event.target.value.toLowerCase(); 
             document.querySelectorAll('.sidebar-section').forEach(section => { 
                 let visibleButtons = 0; 
                 section.querySelectorAll('button').forEach(button => { 
-                    const text = button.querySelector('span[data-key]').textContent.toLowerCase(); 
-                    if (text.includes(query)) { 
+                    const span = button.querySelector('span[data-key]');
+                    const text = span ? span.textContent.toLowerCase() : ''; 
+                    const buttonText = button.id.toLowerCase();
+
+                    // Дополнительная проверка на поиск по id для случая, если span не найден или пуст
+                    if (text.includes(query) || buttonText.includes(query)) { 
                         button.style.display = 'flex'; 
                         visibleButtons++; 
                     } else { 
                         button.style.display = 'none'; 
                     } 
                 }); 
-                section.querySelector('h2').style.display = visibleButtons > 0 ? 'block' : 'none'; 
+                const h2 = section.querySelector('h2');
+                if(h2) h2.style.display = visibleButtons > 0 ? 'block' : 'none'; 
             }); 
         } 
 
@@ -528,13 +820,12 @@
                 const buttons = Array.from(section.querySelectorAll('button')); 
                 buttons.forEach(button => {
                     const favToggle = button.querySelector('.favorite-toggle');
-                    if (favorites.includes(button.id)) {
+                    if (favorites.includes(button.id) && favToggle) {
                         favToggle.classList.add('is-favorite');
-                    } else {
+                    } else if (favToggle) {
                         favToggle.classList.remove('is-favorite');
                     }
                 });
-                // Сортировка - Избранные кнопки идут первыми
                 buttons.sort((a, b) => { 
                     const aIsFav = favorites.includes(a.id); 
                     const bIsFav = favorites.includes(b.id); 
@@ -551,26 +842,23 @@
         } 
         
         function getStats() { console.table(getLocalStorage('chaterlabStats', {})); } 
-
-        // =================================================================================== 
-        // DARK MODE 
-        // =================================================================================== 
+        
         function setupDarkMode() { 
             const toggle = document.getElementById('theme-checkbox'); 
             const currentTheme = getLocalStorage('chaterlabTheme', 'light'); 
             
             if (currentTheme === 'dark') { 
                 document.body.classList.add('dark-mode'); 
-                toggle.checked = true; 
+                if(toggle) toggle.checked = true; 
             } 
 
-            toggle.addEventListener('change', () => { 
+            if(toggle) toggle.addEventListener('change', () => { 
                 document.body.classList.toggle('dark-mode'); 
                 const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light'; 
                 setLocalStorage('chaterlabTheme', theme); 
             }); 
         } 
-        
+
         // ===================================================================================
         // MOBILE VIEW TOGGLE
         // ===================================================================================
@@ -584,13 +872,13 @@
                 if (view === 'buttons') {
                     sidebar.style.display = 'flex';
                     info.style.display = 'none';
-                    switchButtons.classList.add('active');
-                    switchInstructions.classList.remove('active');
+                    if (switchButtons) switchButtons.classList.add('active');
+                    if (switchInstructions) switchInstructions.classList.remove('active');
                 } else if (view === 'instructions') {
                     sidebar.style.display = 'none';
                     info.style.display = 'block';
-                    switchInstructions.classList.add('active');
-                    switchButtons.classList.remove('active');
+                    if (switchInstructions) switchInstructions.classList.add('active');
+                    if (switchButtons) switchButtons.classList.remove('active');
                 }
             } else {
                 // На десктопе всегда оба видны
@@ -605,7 +893,7 @@
         // DYNAMIC CONTENT & EVENT LISTENERS 
         // =================================================================================== 
         
-        // Функции-обертки для копирования
+        // Функции-обертки для копирования (добавлены UK)
         function copyGreetingENG() { copyAndCycle('en', 'greetings', 'btn-greeting-en'); }
         function copyJobENG() { copyAndCycle('en', 'jobDescriptions', 'btn-job-en'); }
         function copyFlirtENG() { copyAndCycle('en', 'flirtClosings', 'btn-flirt-en'); }
@@ -623,9 +911,8 @@
         function copyFlirtUK() { copyAndCycle('uk', 'flirtClosings', 'btn-flirt-uk'); }
         function copyContactUK() { copyAndCycle('uk', 'contacts', 'btn-contact-uk'); }
         
-        // Обработчик изменения размера для мобильного вида
         window.addEventListener('resize', () => {
-             const activeView = document.getElementById('switchInstructions').classList.contains('active') ? 'instructions' : 'buttons';
+             const activeView = document.getElementById('infoBlock').style.display === 'block' ? 'instructions' : 'buttons';
              toggleMobileView(activeView);
         });
         
@@ -643,11 +930,10 @@
                 setupDarkMode(); 
                 renderFavorites(); 
             } else {
-                // Убедимся, что экран логина виден, если не залогинен
                 document.getElementById('login-screen').style.display = 'flex';
             }
         }); 
 
     </script> 
-    </body> 
+</body> 
 </html>
