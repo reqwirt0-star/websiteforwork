@@ -47,12 +47,27 @@
         #app-container { flex-direction: column; min-height: 100vh; opacity: 0; transition: opacity 0.5s ease-in-out; } 
         #app-container:not([data-logged="true"]) { display: none; }
 
-        #animation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--background-main); display: none; justify-content: center; align-items: center; z-index: 3000; } 
-        /* FIX АНИМАЦИИ: Убрал opacity: 0 отсюда */
-        .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; } 
+        #animation-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: var(--background-main); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 3000; 
+            /* FIX: Добавляем плавность для оверлея, если он использует opacity */
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        } 
+        .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; opacity: 0; } 
         
-        /* FIX АНИМАЦИИ: Добавляем opacity: 0, только когда оверлей неактивен, для гарантированного старта */
-        #animation-overlay:not(.animate) .animation-content h1 { opacity: 0; }
+        /* FIX: Гарантируем, что анимация применяется */
+        #animation-overlay.animate .animation-content h1 { 
+            animation: fadeInOut 2.5s ease-in-out forwards; 
+        } 
         
         @keyframes fadeInOut { 0%{opacity:0;transform:scale(.95)} 20%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(.95)} } 
 
@@ -521,8 +536,9 @@
             document.querySelectorAll('.toggle button').forEach(btn => {
                 const buttonLangCode = btn.id.replace('btn', '').toLowerCase();
                 
-                // FIX UA: Проверяем, соответствует ли извлеченный код текущему языку (lang)
-                // Если lang='uk' (отключать украинский не надо), но ID кнопки — 'btnUA' (код 'ua'), то активируем.
+                // Проверяем, соответствует ли извлеченный код текущему языку (lang).
+                // UA: buttonLangCode='ua', lang='uk'.
+                // RU: buttonLangCode='ru', lang='ru'.
                 const isActive = (lang === 'uk' && buttonLangCode === 'ua') || buttonLangCode === lang;
                 
                 btn.classList.toggle('active', isActive);
@@ -678,54 +694,6 @@
             }).catch(() => showToast('Error copying')); 
             
             templateIndexes[lang][type] = (templateIndexes[lang][type] + 1) % templates.length; 
-        } 
-        
-        function handleSearch(event) { 
-            event.preventDefault();
-            const usernameInput = document.getElementById('login-username');
-            const passwordInput = document.getElementById('login-password');
-            const errorDiv = document.getElementById('login-error');
-
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value.trim();
-            
-            errorDiv.classList.remove('show');
-            errorDiv.textContent = '';
-            
-            const isValid = appData.credentials.some(cred => cred.username === username && cred.password === password);
-
-            if (isValid) {
-                setLocalStorage('chaterlabLoggedIn', true);
-                document.body.classList.remove('login-active');
-                document.getElementById('login-screen').style.display = 'none';
-                
-                const overlay = document.getElementById('animation-overlay');
-                
-                // 1. Делаем оверлей видимым (display: flex)
-                overlay.style.display = 'flex';
-                
-                // 2. FIX АНИМАЦИИ: Принудительно заставляем браузер перерисовать элемент (reflow)
-                void overlay.offsetHeight; 
-                
-                // 3. Запускаем анимацию
-                overlay.classList.add('animate'); 
-
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    overlay.classList.remove('animate'); // Очищаем класс для следующего раза
-                    document.getElementById('app-container').style.display = 'flex';
-                    document.getElementById('app-container').setAttribute('data-logged', 'true');
-                    document.getElementById('app-container').style.opacity = '1';
-                    toggleMobileView('buttons'); 
-                }, 2500); 
-
-                setupDarkMode();
-                renderFavorites();
-
-            } else {
-                errorDiv.textContent = appData.i18n[currentLang].errorInvalid;
-                errorDiv.classList.add('show');
-            }
         } 
         
         function handleSearch(event) { 
