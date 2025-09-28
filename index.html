@@ -19,7 +19,8 @@
             --background-card: #ffffff; 
             --border-color: #e5e5e9; 
             --shadow-color: rgba(0, 122, 255, 0.1); 
-            --success-color: #34c759; 
+            --success-color: #34c759;
+            --confirm-color: #ddd2b0; /* НОВЫЙ ЦВЕТ ПОДТВЕРЖДЕНИЯ */
             --error-color: #ff3b30; 
             --star-color: #ffcc00; 
         } 
@@ -58,16 +59,18 @@
             justify-content: center; 
             align-items: center; 
             z-index: 3000; 
-            /* FIX: Добавляем плавность для оверлея, если он использует opacity */
             opacity: 1;
             transition: opacity 0.5s ease-out;
         } 
-        .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; opacity: 0; } 
+        .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; } 
         
-        /* FIX: Гарантируем, что анимация применяется */
+        /* FIX АНИМАЦИИ: Гарантируем, что анимация применяется */
         #animation-overlay.animate .animation-content h1 { 
             animation: fadeInOut 2.5s ease-in-out forwards; 
         } 
+        
+        /* FIX АНИМАЦИИ: Добавляем opacity: 0, только когда оверлей неактивен, для гарантированного старта */
+        #animation-overlay:not(.animate) .animation-content h1 { opacity: 0; }
         
         @keyframes fadeInOut { 0%{opacity:0;transform:scale(.95)} 20%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(.95)} } 
 
@@ -95,25 +98,25 @@
         .sidebar button .lang-marker { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--text-secondary); background-color: #f0f0f2; padding: 2px 6px; border-radius: 5px; } 
         body.dark-mode .sidebar button .lang-marker { background-color: #48484a; } 
         
-        /* НОВЫЕ СТИЛИ ДЛЯ ВИЗУАЛЬНОГО ПОДТВЕРЖДЕНИЯ */
+        /* СТИЛИ ДЛЯ ВИЗУАЛЬНОГО ПОДТВЕРЖДЕНИЯ */
         .sidebar button.copied {
-            background-color: var(--success-color); /* Зеленый фон */
-            color: white !important; /* Белый текст */
-            border-color: var(--success-color);
-            transform: none; /* Убираем эффект "подъема" при копировании */
-            box-shadow: none; 
-        }
-        .sidebar button.copied svg {
-            color: white !important;
-        }
-        .sidebar button.copied:hover {
-            background-color: var(--success-color); 
-            color: white; 
-            border-color: var(--success-color);
+            background-color: var(--confirm-color); /* Песочный фон */
+            color: var(--text-primary) !important; /* Тёмный текст для контраста */
+            border-color: var(--confirm-color);
             transform: none; 
             box-shadow: none; 
         }
-        /* КОНЕЦ НОВЫХ СТИЛЕЙ */
+        .sidebar button.copied svg {
+            color: var(--text-primary) !important;
+        }
+        .sidebar button.copied:hover {
+            background-color: var(--confirm-color); 
+            color: var(--text-primary); 
+            border-color: var(--confirm-color);
+            transform: none; 
+            box-shadow: none; 
+        }
+        /* КОНЕЦ СТИЛЕЙ ВИЗУАЛЬНОГО ПОДТВЕРЖДЕНИЯ */
 
         .favorite-toggle { cursor: pointer; padding: 5px; margin-left: auto; line-height: 0; } 
         .favorite-toggle svg { width: 18px; height: 18px; stroke: var(--text-secondary); fill: none; transition: all 0.2s ease; } 
@@ -233,7 +236,7 @@
 
         
         .toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--success-color); color: white; padding: 12px 20px; border-radius: 10px; opacity: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: all 0.3s ease-in-out; z-index: 1000; font-size: 15px; font-weight: 500; pointer-events: none; white-space: nowrap; } 
-        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; } 
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); } 
 
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 2000; overflow: hidden; } 
         .login-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(315deg, #007aff, #5856d6, #ff2d55, #ff9500); background-size: 400% 400%; animation: gradientAnimation 20s ease infinite; z-index: 1; } 
@@ -498,7 +501,7 @@
                 // 1. Делаем оверлей видимым (display: flex)
                 overlay.style.display = 'flex';
                 
-                // 2. FIX АНИМАЦИИ: Принудительно заставляем браузер перерисовать элемент (reflow)
+                // 2. FIX АНИМАЦИИ: Принудительная перерисовка
                 void overlay.offsetHeight; 
                 
                 // 3. Запускаем анимацию
@@ -506,7 +509,7 @@
 
                 setTimeout(() => {
                     overlay.style.display = 'none';
-                    overlay.classList.remove('animate'); // Очищаем класс для следующего раза
+                    overlay.classList.remove('animate'); 
                     document.getElementById('app-container').style.display = 'flex';
                     document.getElementById('app-container').setAttribute('data-logged', 'true');
                     document.getElementById('app-container').style.opacity = '1';
@@ -558,7 +561,6 @@
                 
                 // Проверяем, соответствует ли извлеченный код текущему языку (lang).
                 // UA: buttonLangCode='ua', lang='uk'.
-                // RU: buttonLangCode='ru', lang='ru'.
                 const isActive = (lang === 'uk' && buttonLangCode === 'ua') || buttonLangCode === lang;
                 
                 btn.classList.toggle('active', isActive);
@@ -715,7 +717,7 @@
                 showToast(successMessage); 
                 trackClick(buttonId); 
                 
-                // === НОВАЯ ЛОГИКА ДЛЯ ВИЗУАЛЬНОГО ФИДБЕКА ===
+                // === ЛОГИКА ДЛЯ ВИЗУАЛЬНОГО ФИДБЕКА ===
                 if (buttonElement) {
                     buttonElement.classList.add('copied');
                     // Убираем класс через короткое время
