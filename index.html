@@ -48,7 +48,12 @@
         #app-container:not([data-logged="true"]) { display: none; }
 
         #animation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--background-main); display: none; justify-content: center; align-items: center; z-index: 3000; } 
-        .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; opacity: 0; } 
+        /* FIX АНИМАЦИИ: Убрал opacity: 0 отсюда */
+        .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; } 
+        
+        /* FIX АНИМАЦИИ: Добавляем opacity: 0, только когда оверлей неактивен, для гарантированного старта */
+        #animation-overlay:not(.animate) .animation-content h1 { opacity: 0; }
+        
         @keyframes fadeInOut { 0%{opacity:0;transform:scale(.95)} 20%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(.95)} } 
 
         header { text-align: center; padding: 18px 20px; font-size: 24px; font-weight: 600; border-bottom: 1px solid var(--border-color); letter-spacing: -0.5px; background-color: var(--background-card); transition: background-color 0.3s, border-color 0.3s; } 
@@ -514,11 +519,10 @@
             
             // FIX: Активация кнопок в блоке .toggle (EN, UA, RU)
             document.querySelectorAll('.toggle button').forEach(btn => {
-                // Извлекаем код языка из ID кнопки (e.g., 'btnEN' -> 'en', 'btnUA' -> 'ua')
                 const buttonLangCode = btn.id.replace('btn', '').toLowerCase();
                 
-                // Проверяем, соответствует ли извлеченный код текущему языку (lang).
-                // Для UA (uk) мы делаем исключение, т.к. ID кнопки 'btnUA' дает код 'ua'.
+                // FIX UA: Проверяем, соответствует ли извлеченный код текущему языку (lang)
+                // Если lang='uk' (отключать украинский не надо), но ID кнопки — 'btnUA' (код 'ua'), то активируем.
                 const isActive = (lang === 'uk' && buttonLangCode === 'ua') || buttonLangCode === lang;
                 
                 btn.classList.toggle('active', isActive);
@@ -674,6 +678,54 @@
             }).catch(() => showToast('Error copying')); 
             
             templateIndexes[lang][type] = (templateIndexes[lang][type] + 1) % templates.length; 
+        } 
+        
+        function handleSearch(event) { 
+            event.preventDefault();
+            const usernameInput = document.getElementById('login-username');
+            const passwordInput = document.getElementById('login-password');
+            const errorDiv = document.getElementById('login-error');
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            errorDiv.classList.remove('show');
+            errorDiv.textContent = '';
+            
+            const isValid = appData.credentials.some(cred => cred.username === username && cred.password === password);
+
+            if (isValid) {
+                setLocalStorage('chaterlabLoggedIn', true);
+                document.body.classList.remove('login-active');
+                document.getElementById('login-screen').style.display = 'none';
+                
+                const overlay = document.getElementById('animation-overlay');
+                
+                // 1. Делаем оверлей видимым (display: flex)
+                overlay.style.display = 'flex';
+                
+                // 2. FIX АНИМАЦИИ: Принудительно заставляем браузер перерисовать элемент (reflow)
+                void overlay.offsetHeight; 
+                
+                // 3. Запускаем анимацию
+                overlay.classList.add('animate'); 
+
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    overlay.classList.remove('animate'); // Очищаем класс для следующего раза
+                    document.getElementById('app-container').style.display = 'flex';
+                    document.getElementById('app-container').setAttribute('data-logged', 'true');
+                    document.getElementById('app-container').style.opacity = '1';
+                    toggleMobileView('buttons'); 
+                }, 2500); 
+
+                setupDarkMode();
+                renderFavorites();
+
+            } else {
+                errorDiv.textContent = appData.i18n[currentLang].errorInvalid;
+                errorDiv.classList.add('show');
+            }
         } 
         
         function handleSearch(event) { 
