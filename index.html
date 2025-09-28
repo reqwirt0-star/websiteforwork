@@ -58,7 +58,7 @@
         
         .sidebar { width: 320px; min-width: 280px; padding: 20px; border-right: 1px solid var(--border-color); background-color: var(--background-card); box-sizing: border-box; display: flex; flex-direction: column; transition: background-color 0.3s, border-color 0.3s; } 
         
-        /* FIX: Контейнер для скроллируемого контента, теперь он содержит все, кроме footer (в десктопе) */
+        /* FIX: Контейнер для скроллируемого контента */
         .sidebar > div:first-child { 
             flex-grow: 1;
             /* На десктопе нет скролла, он нужен только на мобильных или когда контента много */
@@ -457,11 +457,19 @@
                 document.getElementById('login-screen').style.display = 'none';
                 
                 const overlay = document.getElementById('animation-overlay');
+                
+                // 1. Делаем оверлей видимым (display: flex)
                 overlay.style.display = 'flex';
-                overlay.classList.add('animate'); // FIX: Запускаем анимацию
+                
+                // 2. FIX АНИМАЦИИ: Принудительно заставляем браузер перерисовать элемент (reflow)
+                void overlay.offsetHeight; 
+                
+                // 3. Запускаем анимацию
+                overlay.classList.add('animate'); 
 
                 setTimeout(() => {
                     overlay.style.display = 'none';
+                    overlay.classList.remove('animate'); // Очищаем класс для следующего раза
                     document.getElementById('app-container').style.display = 'flex';
                     document.getElementById('app-container').setAttribute('data-logged', 'true');
                     document.getElementById('app-container').style.opacity = '1';
@@ -509,7 +517,6 @@
             
             // FIX: Активация кнопок в блоке .toggle (EN, UA, RU)
             document.querySelectorAll('.toggle button').forEach(btn => {
-                // Используем ID кнопки (btnEN, btnUA, btnRU) для сравнения с текущим языком (en, uk, ru)
                 const isActive = btn.id.toLowerCase().includes(lang);
                 btn.classList.toggle('active', isActive);
             });
