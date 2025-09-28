@@ -95,6 +95,26 @@
         .sidebar button .lang-marker { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--text-secondary); background-color: #f0f0f2; padding: 2px 6px; border-radius: 5px; } 
         body.dark-mode .sidebar button .lang-marker { background-color: #48484a; } 
         
+        /* НОВЫЕ СТИЛИ ДЛЯ ВИЗУАЛЬНОГО ПОДТВЕРЖДЕНИЯ */
+        .sidebar button.copied {
+            background-color: var(--success-color); /* Зеленый фон */
+            color: white !important; /* Белый текст */
+            border-color: var(--success-color);
+            transform: none; /* Убираем эффект "подъема" при копировании */
+            box-shadow: none; 
+        }
+        .sidebar button.copied svg {
+            color: white !important;
+        }
+        .sidebar button.copied:hover {
+            background-color: var(--success-color); 
+            color: white; 
+            border-color: var(--success-color);
+            transform: none; 
+            box-shadow: none; 
+        }
+        /* КОНЕЦ НОВЫХ СТИЛЕЙ */
+
         .favorite-toggle { cursor: pointer; padding: 5px; margin-left: auto; line-height: 0; } 
         .favorite-toggle svg { width: 18px; height: 18px; stroke: var(--text-secondary); fill: none; transition: all 0.2s ease; } 
         .favorite-toggle:hover svg { stroke: var(--star-color); } 
@@ -213,7 +233,7 @@
 
         
         .toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--success-color); color: white; padding: 12px 20px; border-radius: 10px; opacity: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: all 0.3s ease-in-out; z-index: 1000; font-size: 15px; font-weight: 500; pointer-events: none; white-space: nowrap; } 
-        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); } 
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; } 
 
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 2000; overflow: hidden; } 
         .login-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(315deg, #007aff, #5856d6, #ff2d55, #ff9500); background-size: 400% 400%; animation: gradientAnimation 20s ease infinite; z-index: 1; } 
@@ -658,7 +678,7 @@
                                 <td data-label="${isEnglish ? 'Contacts' : (isUkrainian ? 'Контакти' : 'Контакты')}">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
                             </tr>
                             <tr>
-                                <td data-label="${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}">${isEnglish ? 'Kazakhstan (Prime)' : (isUkrainian ? 'Казахстан (досвід Прайма)' : 'Казахстан (опыт Прайма)')}</td>
+                                <td data-label="${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}">${isEnglish ? 'Kazakhstan (Prime)' : (isUkrainian ? 'Досвід Прайма' : 'Опыт Прайма')}</td>
                                 <td data-label="${isEnglish ? 'Contacts' : (isUkrainian ? 'Контакти' : 'Контакты')}">Telegram: @sandra01075 / WhatsApp: -</td>
                             </tr>
                         </tbody>
@@ -688,9 +708,23 @@
             const textToCopy = templates[templateIndexes[lang][type]]; 
             const successMessage = `${appData.i18n[currentLang].toastMessage} (${templateIndexes[lang][type] + 1}/${templates.length})`; 
             
+            // Получаем элемент кнопки
+            const buttonElement = document.getElementById(buttonId);
+
             navigator.clipboard.writeText(textToCopy).then(() => { 
                 showToast(successMessage); 
                 trackClick(buttonId); 
+                
+                // === НОВАЯ ЛОГИКА ДЛЯ ВИЗУАЛЬНОГО ФИДБЕКА ===
+                if (buttonElement) {
+                    buttonElement.classList.add('copied');
+                    // Убираем класс через короткое время
+                    setTimeout(() => {
+                        buttonElement.classList.remove('copied');
+                    }, 300); // Кратковременный "флэш" в 300 мс
+                }
+                // ===========================================
+                
             }).catch(() => showToast('Error copying')); 
             
             templateIndexes[lang][type] = (templateIndexes[lang][type] + 1) % templates.length; 
