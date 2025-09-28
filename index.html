@@ -49,17 +49,27 @@
 
         #animation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--background-main); display: none; justify-content: center; align-items: center; z-index: 3000; } 
         .animation-content h1 { font-size: 48px; color: var(--primary-blue); letter-spacing: -1px; font-weight: 600; opacity: 0; } 
-        #animation-overlay.animate .animation-content h1 { animation: fadeInOut 2.5s ease-in-out forwards; } 
         @keyframes fadeInOut { 0%{opacity:0;transform:scale(.95)} 20%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(.95)} } 
 
         header { text-align: center; padding: 18px 20px; font-size: 24px; font-weight: 600; border-bottom: 1px solid var(--border-color); letter-spacing: -0.5px; background-color: var(--background-card); transition: background-color 0.3s, border-color 0.3s; } 
-        main { display: flex; flex: 1; flex-wrap: wrap; } 
+        
+        /* FIX: Устанавливаем основной контейнер для скролла */
+        main { display: flex; flex: 1; flex-wrap: wrap; overflow: hidden; } 
         
         .sidebar { width: 320px; min-width: 280px; padding: 20px; border-right: 1px solid var(--border-color); background-color: var(--background-card); box-sizing: border-box; display: flex; flex-direction: column; transition: background-color 0.3s, border-color 0.3s; } 
+        
+        /* FIX: Контейнер для кнопок, чтобы футер был прижат */
+        .sidebar > div:first-child { 
+            flex-grow: 1;
+            overflow-y: auto; /* Разрешаем скролл для контента кнопок */
+            padding-right: 5px; /* Небольшой отступ для скроллбара */
+            margin-right: -5px; /* Компенсация отступа для чистого вида */
+        }
+        
         .sidebar h2 { font-size: 16px; margin-bottom: 12px; font-weight: 600; margin-top: 20px; color: var(--text-secondary); padding-left: 5px; } 
         .sidebar h2:first-of-type { margin-top: 0; } 
         .sidebar-divider { border: 0; height: 1px; background-color: var(--border-color); margin: 20px 0; transition: background-color 0.3s; } 
-        .sidebar-footer { margin-top: auto; } 
+        .sidebar-footer { margin-top: auto; flex-shrink: 0; } /* Прижимаем к низу */
         
         .sidebar-section { display: flex; flex-direction: column; } 
         
@@ -116,7 +126,7 @@
         /* Адаптивные стили */
         @media (max-width: 768px) {
             header { font-size: 20px; padding: 15px; } 
-            main { flex-direction: column; } 
+            main { flex-direction: column; flex-grow: 1; height: calc(100vh - 51px - 44px); /* H-Header - H-Switcher */ } 
             
             /* FIX: Мобильный переключатель теперь отображается на мобильных */
             .mobile-switcher { 
@@ -133,6 +143,21 @@
                 border-right: none;
                 border-bottom: 1px solid var(--border-color);
                 display: none; 
+                flex-shrink: 0;
+                /* FIX: Даем сайдбару и инфо всю доступную высоту для скролла */
+                height: 100%; 
+            }
+            
+            /* FIX: Делаем футер сайдбара статичным, а контент прокручиваемым */
+            .sidebar { 
+                padding-bottom: 0; /* Убираем лишний паддинг */
+            }
+            .sidebar > div:first-child { 
+                overflow-y: auto; 
+                height: 100%;
+                padding-right: 5px; 
+                margin-right: -5px; 
+                padding-bottom: 20px; /* Добавляем паддинг снизу для скроллируемого контента */
             }
 
             /* Контейнер main управляет тем, что видно */
@@ -166,7 +191,6 @@
                 color: var(--primary-blue);
             }
         } 
-
         
         .toast-notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--success-color); color: white; padding: 12px 20px; border-radius: 10px; opacity: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: all 0.3s ease-in-out; z-index: 1000; font-size: 15px; font-weight: 500; pointer-events: none; white-space: nowrap; } 
         .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); } 
@@ -335,7 +359,6 @@
             }, 
             templates: { 
                 en: { 
-                    // Восстановлены заглушки
                     greetings: [ "Good day! We are ChaterLab. Do you have experience...", "Hello! This is ChaterLab..." ], 
                     jobDescriptions: [ `Job Description:\n📌 Task: Communicate with foreign men...`, `Vacancy: Chat Operator...` ], 
                     jobDescriptionsPrime: [ `Job Description (Prime):\n📌 Task: Communicate with foreign men...` ],
@@ -343,7 +366,6 @@
                     contacts: [ "Thank you for completing the test...", "Great job on the test!..." ] 
                 }, 
                 ru: { 
-                    // Восстановлены заглушки
                     greetings: [ "Добрый день! Мы компания ChaterLab...", "Здравствуйте! Это ChaterLab..." ], 
                     jobDescriptions: [ `Описание вакансии:\n📌 Задача: Ведение переписки...`, `Вакансия: Оператор чата...` ], 
                     jobDescriptionsPrime: [ `Описание вакансии (Прайм):\n📌 Задача: Ведение переписки...` ], 
@@ -481,7 +503,13 @@
             }); 
             document.documentElement.lang = lang; 
             document.querySelectorAll('.login-lang-switcher button').forEach(btn => btn.classList.toggle('active', btn.id.includes(`-${lang}`))); 
-            document.querySelectorAll('.toggle button').forEach(btn => btn.classList.toggle('active', btn.id.toLowerCase().includes(lang))); 
+            
+            // FIX: Активация кнопок в блоке .toggle (EN, UA, RU)
+            document.querySelectorAll('.toggle button').forEach(btn => {
+                const isActive = btn.id.toLowerCase().includes(lang);
+                btn.classList.toggle('active', isActive);
+            });
+            
             updateInstructions(lang); 
         } 
         
@@ -765,7 +793,7 @@
         function copyFlirtRU() { copyAndCycle('ru', 'flirtClosings', 'btn-flirt-ru'); }
         function copyContactRU() { copyAndCycle('ru', 'contacts', 'btn-contact-ru'); }
         
-        // UK функции-заглушки
+        // UK функции-заглушки (для предотвращения ошибок, если где-то остался вызов)
         function copyGreetingUK() { copyAndCycle('uk', 'greetings', 'btn-greeting-uk'); }
         function copyJobUK() { copyAndCycle('uk', 'jobDescriptions', 'btn-job-uk'); }
         function copyJobPrimeUK() { copyAndCycle('uk', 'jobDescriptionsPrime', 'btn-jobprime-uk'); }
