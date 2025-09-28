@@ -99,24 +99,30 @@
         .instructions table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; } 
         .instructions table th, .instructions table td { border: 1px solid var(--border-color); padding: 10px 12px; font-size: 14px; text-align: left; } 
         .instructions table th { background: var(--light-blue-bg); font-weight: 500; } 
-
-        /* Адаптивные стили для таблиц */
+        /* Оптимизация для мобильных устройств */
         @media (max-width: 768px) {
+            header { font-size: 20px; padding: 15px; } 
+            main { flex-direction: column; } 
+            .mobile-switcher { display: block; } 
+            .sidebar { width: 100%; min-width: unset; padding: 15px; border-right: none; border-bottom: 1px solid var(--border-color); } 
+            .info { padding: 20px 15px; display: none; } 
+            
+            /* Адаптивные стили для таблиц (ключ для оптимизации) */
             .instructions table { display: block; border: none; }
             .instructions table thead, .instructions table tr:first-child { display: none; }
             .instructions table tr { display: block; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--background-card); }
-            .instructions table td { display: block; border: none; padding: 8px 10px; font-size: 15px; text-align: right; position: relative; }
+            .instructions table td { display: block; border: none; padding: 12px 10px; font-size: 15px; text-align: right; position: relative; }
             .instructions table td::before {
                 content: attr(data-label);
                 position: absolute;
                 left: 10px;
-                width: 45%;
+                width: 50%; /* Увеличил ширину метки для лучшего вида */
                 text-align: left;
                 font-weight: 600;
                 color: var(--primary-blue);
             }
-        }
-        
+        } 
+
         .mobile-switcher { display: none; background-color: var(--background-card); border-bottom: 1px solid var(--border-color); padding: 0 10px; text-align: center; } 
         .mobile-switcher-inner { display: flex; } 
         .mobile-switcher button { flex: 1; padding: 14px 0; border: none; border-bottom: 3px solid transparent; background-color: transparent; font-size: 15px; cursor: pointer; font-weight: 600; color: var(--text-secondary); transition: all 0.25s ease; } 
@@ -158,16 +164,6 @@
         input:checked + .slider:before { transform: translateX(24px); } 
         .slider.round { border-radius: 34px; } 
         .slider.round:before { border-radius: 50%; } 
-
-        @media (max-width: 768px) { 
-            header { font-size: 20px; padding: 15px; } 
-            main { flex-direction: column; } 
-            .mobile-switcher { display: block; } 
-            .sidebar { width: 100%; min-width: unset; padding: 15px; border-right: none; border-bottom: 1px solid var(--border-color); } 
-            .info { padding: 20px 15px; } 
-            /* На мобильных info скрыт по умолчанию */
-            .info { display: none; }
-        } 
     </style> 
 </head> 
 <body class="login-active"> 
@@ -183,6 +179,7 @@
             <p data-key="loginSubheader">Панель быстрых ответов</p> 
             <div class="login-lang-switcher"> 
                 <button id="login-lang-ru" onclick="switchLanguage('ru')">RU</button> 
+                <button id="login-lang-uk" onclick="switchLanguage('uk')">UA</button> 
                 <button id="login-lang-en" onclick="switchLanguage('en')">ENG</button> 
             </div> 
             <form id="login-form"> 
@@ -217,7 +214,6 @@
                         <button id="btn-flirt-en" onclick="copyFlirtENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="flirtButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-flirt-en')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
                         <button id="btn-contact-en" onclick="copyContactENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="contactButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-contact-en')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
                     </div> 
-
                     <div class="sidebar-section" id="ru-section"> 
                         <h2 data-key="russianSection">Русский</h2> 
                         <button id="btn-greeting-ru" onclick="copyGreetingRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="greetingButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-greeting-ru')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
@@ -244,6 +240,7 @@
             <div class="info" id="infoBlock"> 
                 <div class="toggle"> 
                     <button id="btnEN" onclick="switchLanguage('en')">EN</button> 
+                    <button id="btnUA" onclick="switchLanguage('uk')">UA</button> 
                     <button id="btnRU" onclick="switchLanguage('ru')">RU</button> 
                 </div> 
                 <h3 id="infoHeader" data-key="aboutHeader"></h3> 
@@ -283,7 +280,16 @@
                     instructionHeader: "📖 Инструкция для работы", errorInvalid: "Неверные данные. Свяжитесь с менеджером.", 
                     toastMessage: "Скопировано", searchPlaceholder: "Поиск...", darkModeLabel: "Тёмная тема", 
                     greetingButtonLabel: "Приветствие", jobDescButtonLabel: "Описание вакансии", jobPrimeButtonLabel: "Описание вакансии (Прайм)", flirtButtonLabel: "Флирт-задание", contactButtonLabel: "Контакт", 
-                } 
+                },
+                 uk: { 
+                    loginHeader: "ChaterLab", loginSubheader: "Панель швидких відповідей", loginPlaceholder: "Логін", passwordPlaceholder: "Пароль", loginButton: "Увійти", 
+                    appHeader: "ChaterLab Quick Replies", repliesTab: "Відповіді", instructionsTab: "Інструкція", 
+                    englishSection: "Англійський контент", russianSection: "Російський контент", logoutButtonText: "Вийти", 
+                    aboutHeader: "Про панель", aboutText: "Ця панель дозволяє швидко копіювати професійні привітання, опис вакансії, тестове завдання та контакти для ChaterLab. Натисніть будь-яку кнопку, щоб скопіювати текст у буфер обміну.", 
+                    instructionHeader: "📖 Інструкція для роботи", errorInvalid: "Невірні дані. Зв'яжіться з менеджером.", 
+                    toastMessage: "Скопійовано", searchPlaceholder: "Пошук...", darkModeLabel: "Темна тема", 
+                    greetingButtonLabel: "Привітання", jobDescButtonLabel: "Опис вакансії", jobPrimeButtonLabel: "Опис вакансії (Прайм)", flirtButtonLabel: "Флірт-завдання", contactButtonLabel: "Контакт", 
+                }
             }, 
             templates: { 
                 en: { 
@@ -307,7 +313,7 @@
         // GLOBAL STATE & UTILITIES 
         // =================================================================================== 
         let currentLang = 'ru'; 
-        const templateIndexes = { en: {}, ru: {} }; // Удален 'uk'
+        const templateIndexes = { en: {}, ru: {} }; 
 
         function getLocalStorage(key, defaultValue) { 
             try { 
@@ -432,7 +438,7 @@
         } 
         
         /**
-         * Обновленная функция для генерации инструкции (только RU/EN)
+         * Обновленная функция для генерации инструкции (с использованием i18n для заголовков, но фиксированным контентом)
          */
         function updateInstructions(lang) {
             const instructionsDiv = document.getElementById('instructions');
@@ -447,185 +453,103 @@
 
             // 2. Генерируем HTML для инструкции в зависимости от языка
             let content;
-            if (lang === 'en') {
-                content = `
-                    <h3 data-key="instructionHeader">📖 Instruction</h3>
+            const isEnglish = lang === 'en';
+            const langSuffix = isEnglish ? '(ENG)' : '(RU)';
 
-                    <div class="step">
-                        <h4><span class="step-number">1</span> Candidate Greeting</h4>
-                        <ul>
-                            <li>Russian audience → <strong>Приветствие (RU)</strong></li>
-                            <li>English audience → <strong>Greeting (ENG)</strong></li>
-                        </ul>
-                    </div>
+            // Единый шаблон, использующий переменные для языка
+            content = `
+                <h3 data-key="instructionHeader">${i18n.instructionHeader}</h3>
 
-                    <div class="step">
-                        <h4><span class="step-number">2</span> Job Description</h4>
-                        <ul>
-                            <li>Russian audience → <strong>Описание вакансии (RU)</strong></li>
-                            <li>English audience → <strong>Job Description (ENG)</strong></li>
-                        </ul>
-                        <table>
-                            <thead>
-                                <tr><th>Location</th><th>Experience</th><th>Schedule</th><th>Button</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Location">Kazakhstan</td>
-                                    <td data-label="Experience">Basic / No experience</td>
-                                    <td data-label="Schedule">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
-                                    <td data-label="Button">Job Description (ENG) / Описание вакансии (RU)</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Location">Kazakhstan</td>
-                                    <td data-label="Experience">Prime experience</td>
-                                    <td data-label="Schedule">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
-                                    <td data-label="Button">Job Description (Prime) (ENG) / Описание вакансии. С опытом Прайма (RU)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="step">
+                    <h4><span class="step-number">1</span> ${isEnglish ? 'Candidate Greeting' : 'Приветствие кандидата'}</h4>
+                    <ul>
+                        <li>${isEnglish ? 'Russian audience' : 'Русскоязычная аудитория'} → <strong>Приветствие (RU)</strong></li>
+                        <li>${isEnglish ? 'English audience' : 'Англоязычная аудитория'} → <strong>Greeting (ENG)</strong></li>
+                    </ul>
+                </div>
 
-                    <div class="step">
-                        <h4><span class="step-number">3</span> Test Assignment</h4>
-                        <ul>
-                            <li>Russian audience → <strong>Флирт-задание (RU)</strong></li>
-                            <li>English audience → <strong>Flirt Closing (ENG)</strong></li>
-                        </ul>
-                    </div>
+                <div class="step">
+                    <h4><span class="step-number">2</span> ${isEnglish ? 'Job Description' : 'Описание вакансии'}</h4>
+                    <ul>
+                        <li>${isEnglish ? 'Russian audience' : 'Русскоязычная аудитория'} → <strong>Описание вакансии (RU)</strong></li>
+                        <li>${isEnglish ? 'English audience' : 'Англоязычная аудитория'} → <strong>Job Description (ENG)</strong></li>
+                    </ul>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>${isEnglish ? 'Location' : 'Локация'}</th>
+                                <th>${isEnglish ? 'Experience' : 'Опыт'}</th>
+                                <th>${isEnglish ? 'Schedule' : 'График'}</th>
+                                <th>${isEnglish ? 'Button' : 'Кнопка'}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Казахстан</td>
+                                <td data-label="${isEnglish ? 'Experience' : 'Опыт'}">${isEnglish ? 'Basic / No experience' : 'Без опыта / базовый'}</td>
+                                <td data-label="${isEnglish ? 'Schedule' : 'График'}">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
+                                <td data-label="${isEnglish ? 'Button' : 'Кнопка'}">${isEnglish ? 'Job Description (ENG)' : 'Описание вакансии (RU)'}</td>
+                            </tr>
+                            <tr>
+                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Казахстан</td>
+                                <td data-label="${isEnglish ? 'Experience' : 'Опыт'}">${isEnglish ? 'Prime experience' : 'Опыт Прайма'}</td>
+                                <td data-label="${isEnglish ? 'Schedule' : 'График'}">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
+                                <td data-label="${isEnglish ? 'Button' : 'Кнопка'}">${isEnglish ? 'Job Description (Prime) (ENG)' : 'Описание вакансии. С опытом Прайма (RU)'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <div class="step">
-                        <h4><span class="step-number">4</span> Handling Applications & Documentation</h4>
-                        <ol>
-                            <li>All applications are logged in the <strong>LEADS</strong> sheet.</li>
-                            <li>After completing the test and choosing a schedule → provide the manager contact.</li>
-                            <li>Send in the work Telegram group:
-                                <ul>
-                                    <li>Screenshot of the completed test</li>
-                                    <li>Below it: candidate contacts, schedule, assigned manager</li>
-                                </ul>
-                            </li>
-                            <li>Documentation in Google Sheets:
-                                <ul>
-                                    <li>Philippines → <strong>Chathouse Philippines</strong></li>
-                                    <li>Kazakhstan → <strong>Chathouse</strong></li>
-                                    <li>Tab: <strong>Interns</strong></li>
-                                    <li>Fill: Date, Candidate contact, Schedule, Manager</li>
-                                    <li>Status → "assigned to admin"</li>
-                                </ul>
-                            </li>
-                        </ol>
-                    </div>
+                <div class="step">
+                    <h4><span class="step-number">3</span> ${isEnglish ? 'Test Assignment' : 'Тестовое задание'}</h4>
+                    <ul>
+                        <li>${isEnglish ? 'Russian audience' : 'Русскоязычная аудитория'} → <strong>Флирт-задание (RU)</strong></li>
+                        <li>${isEnglish ? 'English audience' : 'Англоязычная аудитория'} → <strong>Flirt Closing (ENG)</strong></li>
+                    </ul>
+                </div>
 
-                    <div class="step">
-                        <h4><span class="step-number">5</span> Manager Contacts</h4>
-                        <table>
-                            <thead>
-                                <tr><th>Location</th><th>Contacts</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Location">Philippines</td>
-                                    <td data-label="Contacts">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Location">Kazakhstan (Prime)</td>
-                                    <td data-label="Contacts">Telegram: @sandra01075 / WhatsApp: -</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            } else { // lang === 'ru' (Русский)
-                content = `
-                    <h3 data-key="instructionHeader">📖 Инструкция для работы</h3>
+                <div class="step">
+                    <h4><span class="step-number">4</span> ${isEnglish ? 'Handling Applications & Documentation' : 'Работа с заявками и документацией'}</h4>
+                    <ol>
+                        <li>${isEnglish ? 'All applications are logged in the' : 'Все заявки фиксируются в таблице'} <strong>ЛИДЫ</strong>.</li>
+                        <li>${isEnglish ? 'After completing the test and choosing a schedule → provide the manager contact.' : 'После выполнения теста и выбора графика → выдаём контакт менеджера.'}</li>
+                        <li>${isEnglish ? 'Send in the work Telegram group:' : 'Отправляем в рабочую Telegram-группу:'}
+                            <ul>
+                                <li>${isEnglish ? 'Screenshot of the completed test' : 'Скрин выполненного теста'}</li>
+                                <li>${isEnglish ? 'Below it: candidate contacts, schedule, assigned manager' : 'Подпись: контакты кандидата, график, контакт менеджера'}</li>
+                            </ul>
+                        </li>
+                        <li>${isEnglish ? 'Documentation in Google Sheets:' : 'Документация в Google Sheets:'}
+                            <ul>
+                                <li>${isEnglish ? 'Philippines' : 'Филиппины'} → <strong>Chathouse Philippines</strong></li>
+                                <li>${isEnglish ? 'Kazakhstan' : 'Казахстан'} → <strong>Chathouse</strong></li>
+                                <li>${isEnglish ? 'Tab: <strong>Interns</strong>' : 'Вкладка: <strong>Стажёры</strong>'}</li>
+                                <li>${isEnglish ? 'Fill: Date, Candidate contact, Schedule, Manager' : 'Заполняем: Дата, Контакт, График, Менеджер'}</li>
+                                <li>${isEnglish ? 'Status → "assigned to admin"' : 'Статус → «передан админу»'}</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
 
-                    <div class="step">
-                        <h4><span class="step-number">1</span> Приветствие кандидата</h4>
-                        <ul>
-                            <li>Русскоязычная аудитория → <strong>Приветствие (RU)</strong></li>
-                            <li>Англоязычная аудитория → <strong>Greeting (ENG)</strong></li>
-                        </ul>
-                    </div>
-
-                    <div class="step">
-                        <h4><span class="step-number">2</span> Описание вакансии</h4>
-                        <ul>
-                            <li>Русскоязычная аудитория → <strong>Описание вакансии (RU)</strong></li>
-                            <li>Англоязычная аудитория → <strong>Job Description (ENG)</strong></li>
-                        </ul>
-                        <table>
-                            <thead>
-                                <tr><th>Локация</th><th>Опыт</th><th>График</th><th>Кнопка</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Локация">Казахстан</td>
-                                    <td data-label="Опыт">Без опыта / базовый</td>
-                                    <td data-label="График">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
-                                    <td data-label="Кнопка">Описание вакансии (RU)</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Локация">Казахстан</td>
-                                    <td data-label="Опыт">Опыт Прайма</td>
-                                    <td data-label="График">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
-                                    <td data-label="Кнопка">Описание вакансии. С опытом Прайма (RU)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="step">
-                        <h4><span class="step-number">3</span> Тестовое задание</h4>
-                        <ul>
-                            <li>Русскоязычная аудитория → <strong>Флирт-задание (RU)</strong></li>
-                            <li>Англоязычная аудитория → <strong>Flirt Closing (ENG)</strong></li>
-                        </ul>
-                    </div>
-
-                    <div class="step">
-                        <h4><span class="step-number">4</span> Работа с заявками и документацией</h4>
-                        <ol>
-                            <li>Все заявки фиксируются в таблице <strong>ЛИДЫ</strong>.</li>
-                            <li>После выполнения теста и выбора графика → выдаём контакт менеджера.</li>
-                            <li>Отправляем в рабочую Telegram-группу:
-                                <ul>
-                                    <li>Скрин выполненного теста</li>
-                                    <li>Подпись: контакты кандидата, график, контакт менеджера</li>
-                                </ul>
-                            </li>
-                            <li>Документация в Google Sheets:
-                                <ul>
-                                    <li>Филиппины → <strong>Chathouse Philippines</strong></li>
-                                    <li>Казахстан → <strong>Chathouse</strong></li>
-                                    <li>Вкладка: <strong>Стажёры</strong></li>
-                                    <li>Заполняем: Дата, Контакт, График, Менеджер</li>
-                                    <li>Статус → «передан админу»</li>
-                                </ul>
-                            </li>
-                        </ol>
-                    </div>
-
-                    <div class="step">
-                        <h4><span class="step-number">5</span> Контакты менеджеров</h4>
-                        <table>
-                            <thead>
-                                <tr><th>Локация</th><th>Контакты</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Локация">Филиппины</td>
-                                    <td data-label="Контакты">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Локация">Казахстан (опыт Прайма)</td>
-                                    <td data-label="Контакты">Telegram: @sandra01075 / WhatsApp: -</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
+                <div class="step">
+                    <h4><span class="step-number">5</span> ${isEnglish ? 'Manager Contacts' : 'Контакты менеджеров'}</h4>
+                    <table>
+                        <thead>
+                            <tr><th>${isEnglish ? 'Location' : 'Локация'}</th><th>${isEnglish ? 'Contacts' : 'Контакты'}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Филиппины</td>
+                                <td data-label="${isEnglish ? 'Contacts' : 'Контакты'}">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
+                            </tr>
+                            <tr>
+                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Казахстан (опыт Прайма)</td>
+                                <td data-label="${isEnglish ? 'Contacts' : 'Контакты'}">Telegram: @sandra01075 / WhatsApp: -</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
             instructionsDiv.innerHTML = content;
         }
 
@@ -740,7 +664,9 @@
             const switchButtons = document.getElementById('switchButtons');
             const switchInstructions = document.getElementById('switchInstructions');
 
-            if (window.innerWidth <= 768) {
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
                 if (view === 'buttons') {
                     sidebar.style.display = 'flex';
                     info.style.display = 'none';
@@ -789,12 +715,7 @@
             document.getElementById('searchInput').addEventListener('input', handleSearch); 
             
             const initialLang = getInitialLanguage(); 
-            // Принудительно ставим RU или EN, если ранее был выбран UK
-            if (initialLang === 'uk') {
-                switchLanguage('ru');
-            } else {
-                switchLanguage(initialLang); 
-            }
+            switchLanguage(initialLang); 
 
             if (loggedIn) { 
                 toggleMobileView('buttons'); 
