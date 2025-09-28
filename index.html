@@ -99,7 +99,8 @@
         .instructions table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; } 
         .instructions table th, .instructions table td { border: 1px solid var(--border-color); padding: 10px 12px; font-size: 14px; text-align: left; } 
         .instructions table th { background: var(--light-blue-bg); font-weight: 500; } 
-        /* Оптимизация для мобильных устройств */
+
+        /* Адаптивные стили для таблиц */
         @media (max-width: 768px) {
             header { font-size: 20px; padding: 15px; } 
             main { flex-direction: column; } 
@@ -214,6 +215,7 @@
                         <button id="btn-flirt-en" onclick="copyFlirtENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="flirtButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-flirt-en')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
                         <button id="btn-contact-en" onclick="copyContactENG()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="contactButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-contact-en')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
                     </div> 
+
                     <div class="sidebar-section" id="ru-section"> 
                         <h2 data-key="russianSection">Русский</h2> 
                         <button id="btn-greeting-ru" onclick="copyGreetingRU()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/></svg><span data-key="greetingButtonLabel"></span> <div class="favorite-toggle" onclick="toggleFavorite(event, 'btn-greeting-ru')"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg></div></button> 
@@ -454,97 +456,116 @@
             // 2. Генерируем HTML для инструкции в зависимости от языка
             let content;
             const isEnglish = lang === 'en';
-            const langSuffix = isEnglish ? '(ENG)' : '(RU)';
+            const isUkrainian = lang === 'uk';
+            
+            // Определяем язык для отображения в инструкции
+            let ruText, enText, ukText;
+            if (isEnglish) {
+                ruText = 'Russian audience';
+                enText = 'English audience';
+                ukText = 'Ukrainian audience';
+            } else if (isUkrainian) {
+                ruText = 'Російськомовна аудиторія';
+                enText = 'Англомовна аудиторія';
+                ukText = 'Україномовна аудиторія';
+            } else { // ru
+                ruText = 'Русскоязычная аудитория';
+                enText = 'Англоязычная аудитория';
+                ukText = 'Украиноязычная аудитория';
+            }
+            
+            // Используем локализованные заголовки
+            const loc = (key) => appData.i18n[lang][key] || key;
 
-            // Единый шаблон, использующий переменные для языка
+
             content = `
-                <h3 data-key="instructionHeader">${i18n.instructionHeader}</h3>
+                <h3 data-key="instructionHeader">${loc('instructionHeader')}</h3>
 
                 <div class="step">
-                    <h4><span class="step-number">1</span> ${isEnglish ? 'Candidate Greeting' : 'Приветствие кандидата'}</h4>
+                    <h4><span class="step-number">1</span> ${isEnglish ? 'Candidate Greeting' : (isUkrainian ? 'Привітання кандидата' : 'Приветствие кандидата')}</h4>
                     <ul>
-                        <li>${isEnglish ? 'Russian audience' : 'Русскоязычная аудитория'} → <strong>Приветствие (RU)</strong></li>
-                        <li>${isEnglish ? 'English audience' : 'Англоязычная аудитория'} → <strong>Greeting (ENG)</strong></li>
+                        <li>${ruText} → <strong>Приветствие (RU)</strong></li>
+                        <li>${enText} → <strong>Greeting (ENG)</strong></li>
                     </ul>
                 </div>
 
                 <div class="step">
-                    <h4><span class="step-number">2</span> ${isEnglish ? 'Job Description' : 'Описание вакансии'}</h4>
+                    <h4><span class="step-number">2</span> ${isEnglish ? 'Job Description' : (isUkrainian ? 'Опис вакансії' : 'Описание вакансии')}</h4>
                     <ul>
-                        <li>${isEnglish ? 'Russian audience' : 'Русскоязычная аудитория'} → <strong>Описание вакансии (RU)</strong></li>
-                        <li>${isEnglish ? 'English audience' : 'Англоязычная аудитория'} → <strong>Job Description (ENG)</strong></li>
+                        <li>${ruText} → <strong>Описание вакансии (RU)</strong></li>
+                        <li>${enText} → <strong>Job Description (ENG)</strong></li>
                     </ul>
                     <table>
                         <thead>
                             <tr>
-                                <th>${isEnglish ? 'Location' : 'Локация'}</th>
-                                <th>${isEnglish ? 'Experience' : 'Опыт'}</th>
-                                <th>${isEnglish ? 'Schedule' : 'График'}</th>
-                                <th>${isEnglish ? 'Button' : 'Кнопка'}</th>
+                                <th>${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}</th>
+                                <th>${isEnglish ? 'Experience' : (isUkrainian ? 'Досвід' : 'Опыт')}</th>
+                                <th>${isEnglish ? 'Schedule' : (isUkrainian ? 'Графік' : 'График')}</th>
+                                <th>${isEnglish ? 'Button' : (isUkrainian ? 'Кнопка' : 'Кнопка')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Казахстан</td>
-                                <td data-label="${isEnglish ? 'Experience' : 'Опыт'}">${isEnglish ? 'Basic / No experience' : 'Без опыта / базовый'}</td>
-                                <td data-label="${isEnglish ? 'Schedule' : 'График'}">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
-                                <td data-label="${isEnglish ? 'Button' : 'Кнопка'}">${isEnglish ? 'Job Description (ENG)' : 'Описание вакансии (RU)'}</td>
+                                <td data-label="${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}">Казахстан</td>
+                                <td data-label="${isEnglish ? 'Experience' : (isUkrainian ? 'Досвід' : 'Опыт')}">${isEnglish ? 'Basic / No experience' : (isUkrainian ? 'Без досвіду / базовий' : 'Без опыта / базовый')}</td>
+                                <td data-label="${isEnglish ? 'Schedule' : (isUkrainian ? 'Графік' : 'График')}">08:00–16:00, 16:00–00:00, 00:00–08:00 (Kyiv time)</td>
+                                <td data-label="${isEnglish ? 'Button' : (isUkrainian ? 'Кнопка' : 'Кнопка')}">${isEnglish ? 'Job Description (ENG)' : 'Описание вакансии (RU)'}</td>
                             </tr>
                             <tr>
-                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Казахстан</td>
-                                <td data-label="${isEnglish ? 'Experience' : 'Опыт'}">${isEnglish ? 'Prime experience' : 'Опыт Прайма'}</td>
-                                <td data-label="${isEnglish ? 'Schedule' : 'График'}">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
-                                <td data-label="${isEnglish ? 'Button' : 'Кнопка'}">${isEnglish ? 'Job Description (Prime) (ENG)' : 'Описание вакансии. С опытом Прайма (RU)'}</td>
+                                <td data-label="${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}">Казахстан</td>
+                                <td data-label="${isEnglish ? 'Experience' : (isUkrainian ? 'Досвід' : 'Опыт')}">${isEnglish ? 'Prime experience' : (isUkrainian ? 'Досвід Прайма' : 'Опыт Прайма')}</td>
+                                <td data-label="${isEnglish ? 'Schedule' : (isUkrainian ? 'Графік' : 'График')}">14:00–22:00, 22:00–06:00 (Kyiv time)</td>
+                                <td data-label="${isEnglish ? 'Button' : (isUkrainian ? 'Кнопка' : 'Кнопка')}">${isEnglish ? 'Job Description (Prime) (ENG)' : 'Описание вакансии. С опытом Прайма (RU)'}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="step">
-                    <h4><span class="step-number">3</span> ${isEnglish ? 'Test Assignment' : 'Тестовое задание'}</h4>
+                    <h4><span class="step-number">3</span> ${isEnglish ? 'Test Assignment' : (isUkrainian ? 'Тестове завдання' : 'Тестовое задание')}</h4>
                     <ul>
-                        <li>${isEnglish ? 'Russian audience' : 'Русскоязычная аудитория'} → <strong>Флирт-задание (RU)</strong></li>
-                        <li>${isEnglish ? 'English audience' : 'Англоязычная аудитория'} → <strong>Flirt Closing (ENG)</strong></li>
+                        <li>${ruText} → <strong>Флирт-задание (RU)</strong></li>
+                        <li>${enText} → <strong>Flirt Closing (ENG)</strong></li>
                     </ul>
                 </div>
 
                 <div class="step">
-                    <h4><span class="step-number">4</span> ${isEnglish ? 'Handling Applications & Documentation' : 'Работа с заявками и документацией'}</h4>
+                    <h4><span class="step-number">4</span> ${isEnglish ? 'Handling Applications & Documentation' : (isUkrainian ? 'Робота із заявками та документацією' : 'Работа с заявками и документацией')}</h4>
                     <ol>
-                        <li>${isEnglish ? 'All applications are logged in the' : 'Все заявки фиксируются в таблице'} <strong>ЛИДЫ</strong>.</li>
-                        <li>${isEnglish ? 'After completing the test and choosing a schedule → provide the manager contact.' : 'После выполнения теста и выбора графика → выдаём контакт менеджера.'}</li>
-                        <li>${isEnglish ? 'Send in the work Telegram group:' : 'Отправляем в рабочую Telegram-группу:'}
+                        <li>${isEnglish ? 'All applications are logged in the' : (isUkrainian ? 'Усі заявки фіксуються в таблиці' : 'Все заявки фиксируются в таблице')} <strong>ЛИДЫ</strong>.</li>
+                        <li>${isEnglish ? 'After completing the test and choosing a schedule → provide the manager contact.' : (isUkrainian ? 'Після виконання тесту та вибору графіку → видаємо контакт менеджера.' : 'После выполнения теста и выбора графика → выдаём контакт менеджера.')}</li>
+                        <li>${isEnglish ? 'Send in the work Telegram group:' : (isUkrainian ? 'Надсилаємо в робочу Telegram-групу:' : 'Отправляем в рабочую Telegram-группу:')}
                             <ul>
-                                <li>${isEnglish ? 'Screenshot of the completed test' : 'Скрин выполненного теста'}</li>
-                                <li>${isEnglish ? 'Below it: candidate contacts, schedule, assigned manager' : 'Подпись: контакты кандидата, график, контакт менеджера'}</li>
+                                <li>${isEnglish ? 'Screenshot of the completed test' : (isUkrainian ? 'Скрін виконаного тесту' : 'Скрин выполненного теста')}</li>
+                                <li>${isEnglish ? 'Below it: candidate contacts, schedule, assigned manager' : (isUkrainian ? 'Підпис: контакти кандидата, графік, контакт менеджера' : 'Подпись: контакты кандидата, график, контакт менеджера')}</li>
                             </ul>
                         </li>
-                        <li>${isEnglish ? 'Documentation in Google Sheets:' : 'Документация в Google Sheets:'}
+                        <li>${isEnglish ? 'Documentation in Google Sheets:' : (isUkrainian ? 'Документація у Google Sheets:' : 'Документация в Google Sheets:')}
                             <ul>
-                                <li>${isEnglish ? 'Philippines' : 'Филиппины'} → <strong>Chathouse Philippines</strong></li>
-                                <li>${isEnglish ? 'Kazakhstan' : 'Казахстан'} → <strong>Chathouse</strong></li>
-                                <li>${isEnglish ? 'Tab: <strong>Interns</strong>' : 'Вкладка: <strong>Стажёры</strong>'}</li>
-                                <li>${isEnglish ? 'Fill: Date, Candidate contact, Schedule, Manager' : 'Заполняем: Дата, Контакт, График, Менеджер'}</li>
-                                <li>${isEnglish ? 'Status → "assigned to admin"' : 'Статус → «передан админу»'}</li>
+                                <li>${isEnglish ? 'Philippines' : (isUkrainian ? 'Філіппіни' : 'Филиппины')} → <strong>Chathouse Philippines</strong></li>
+                                <li>${isEnglish ? 'Kazakhstan' : (isUkrainian ? 'Казахстан' : 'Казахстан')} → <strong>Chathouse</strong></li>
+                                <li>${isEnglish ? 'Tab: <strong>Interns</strong>' : (isUkrainian ? 'Вкладка: <strong>Стажисти</strong>' : 'Вкладка: <strong>Стажёры</strong>')}</li>
+                                <li>${isEnglish ? 'Fill: Date, Candidate contact, Schedule, Manager' : (isUkrainian ? 'Заповнюємо: Дата, Контакт, Графік, Менеджер' : 'Заполняем: Дата, Контакт, График, Менеджер')}</li>
+                                <li>${isEnglish ? 'Status → "assigned to admin"' : (isUkrainian ? 'Статус → «передано адміну»' : 'Статус → «передан админу»')}</li>
                             </ul>
                         </li>
                     </ol>
                 </div>
 
                 <div class="step">
-                    <h4><span class="step-number">5</span> ${isEnglish ? 'Manager Contacts' : 'Контакты менеджеров'}</h4>
+                    <h4><span class="step-number">5</span> ${isEnglish ? 'Manager Contacts' : (isUkrainian ? 'Контакти менеджерів' : 'Контакты менеджеров')}</h4>
                     <table>
                         <thead>
-                            <tr><th>${isEnglish ? 'Location' : 'Локация'}</th><th>${isEnglish ? 'Contacts' : 'Контакты'}</th></tr>
+                            <tr><th>${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}</th><th>${isEnglish ? 'Contacts' : (isUkrainian ? 'Контакти' : 'Контакты')}</th></tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Филиппины</td>
-                                <td data-label="${isEnglish ? 'Contacts' : 'Контакты'}">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
+                                <td data-label="${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}">${isEnglish ? 'Philippines' : (isUkrainian ? 'Філіппіни' : 'Филиппины')}</td>
+                                <td data-label="${isEnglish ? 'Contacts' : (isUkrainian ? 'Контакти' : 'Контакты')}">Telegram: @strighik / WhatsApp: +380990650264<br>Telegram: @jszmn1827 / WhatsApp: +639260025915</td>
                             </tr>
                             <tr>
-                                <td data-label="${isEnglish ? 'Location' : 'Локация'}">Казахстан (опыт Прайма)</td>
-                                <td data-label="${isEnglish ? 'Contacts' : 'Контакты'}">Telegram: @sandra01075 / WhatsApp: -</td>
+                                <td data-label="${isEnglish ? 'Location' : (isUkrainian ? 'Локація' : 'Локация')}">${isEnglish ? 'Kazakhstan (Prime)' : (isUkrainian ? 'Казахстан (досвід Прайма)' : 'Казахстан (опыт Прайма)')}</td>
+                                <td data-label="${isEnglish ? 'Contacts' : (isUkrainian ? 'Контакти' : 'Контакты')}">Telegram: @sandra01075 / WhatsApp: -</td>
                             </tr>
                         </tbody>
                     </table>
@@ -557,6 +578,12 @@
         // CORE FUNCTIONALITY: COPY, SEARCH, FAVORITES, STATS 
         // =================================================================================== 
         function copyAndCycle(lang, type, buttonId) { 
+            // Проверяем, существует ли контент для данного языка и типа, прежде чем пытаться скопировать
+            if (!appData.templates[lang] || !appData.templates[lang][type]) {
+                showToast(`Error: Content for ${lang} not found.`);
+                return;
+            }
+
             const templates = appData.templates[lang][type]; 
             if (!templateIndexes[lang][type]) templateIndexes[lang][type] = 0; 
             
@@ -668,20 +695,23 @@
 
             if (isMobile) {
                 if (view === 'buttons') {
+                    // Кнопки: Показать сайдбар (как flex), скрыть инструкцию
                     sidebar.style.display = 'flex';
                     info.style.display = 'none';
                     if (switchButtons) switchButtons.classList.add('active');
                     if (switchInstructions) switchInstructions.classList.remove('active');
                 } else if (view === 'instructions') {
+                    // Инструкции: Скрыть сайдбар, показать инструкцию
                     sidebar.style.display = 'none';
                     info.style.display = 'block';
                     if (switchInstructions) switchInstructions.classList.add('active');
                     if (switchButtons) switchButtons.classList.remove('active');
                 }
             } else {
-                // На десктопе всегда оба видны
+                // На десктопе: Всегда показать оба
                 sidebar.style.display = 'flex';
                 info.style.display = 'block';
+                // Снять активность с мобильных переключателей
                 if (switchButtons) switchButtons.classList.remove('active');
                 if (switchInstructions) switchInstructions.classList.remove('active');
             }
@@ -704,7 +734,8 @@
         function copyContactRU() { copyAndCycle('ru', 'contacts', 'btn-contact-ru'); }
         
         window.addEventListener('resize', () => {
-             const activeView = document.getElementById('infoBlock').style.display === 'block' ? 'instructions' : 'buttons';
+             // Определяем текущий активный вид, чтобы вернуться к нему при ресайзе
+             const activeView = document.getElementById('infoBlock').style.display === 'block' && window.innerWidth <= 768 ? 'instructions' : 'buttons';
              toggleMobileView(activeView);
         });
         
