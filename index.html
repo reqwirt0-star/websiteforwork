@@ -58,13 +58,10 @@
         
         .sidebar { width: 320px; min-width: 280px; padding: 20px; border-right: 1px solid var(--border-color); background-color: var(--background-card); box-sizing: border-box; display: flex; flex-direction: column; transition: background-color 0.3s, border-color 0.3s; } 
         
-        /* FIX: Контейнер для скроллируемого контента */
+        /* FIX: Контейнер для скроллируемого контента, теперь он содержит все, кроме footer (в десктопе) */
         .sidebar > div:first-child { 
             flex-grow: 1;
-            overflow-y: auto; 
-            padding-right: 5px; 
-            margin-right: -5px; 
-            padding-bottom: 20px;
+            /* На десктопе нет скролла, он нужен только на мобильных или когда контента много */
         }
         
         .sidebar h2 { font-size: 16px; margin-bottom: 12px; font-weight: 600; margin-top: 20px; color: var(--text-secondary); padding-left: 5px; } 
@@ -160,9 +157,11 @@
                 -webkit-overflow-scrolling: touch; 
             }
 
-            /* FIX: Убираем паддинг снизу у сайдбара, чтобы футер был на месте */
-            .sidebar { padding-bottom: 0; }
-            
+            /* FIX: Убираем паддинг снизу у сайдбара, т.к. футер теперь внутри скролла */
+            .sidebar { 
+                padding-bottom: 0; 
+            }
+
             /* Контейнер main управляет тем, что видно */
             main.sidebar-visible .sidebar {
                 display: flex;
@@ -182,8 +181,7 @@
                 font-size: 15px; 
                 text-align: right; 
                 position: relative;
-                /* FIX: Принудительный перенос длинных строк, типа контактов/URL */
-                word-break: break-all;
+                word-break: break-all; /* FIX: Принудительный перенос длинных строк */
             }
             .instructions table td::before {
                 content: attr(data-label);
@@ -511,6 +509,7 @@
             
             // FIX: Активация кнопок в блоке .toggle (EN, UA, RU)
             document.querySelectorAll('.toggle button').forEach(btn => {
+                // Используем ID кнопки (btnEN, btnUA, btnRU) для сравнения с текущим языком (en, uk, ru)
                 const isActive = btn.id.toLowerCase().includes(lang);
                 btn.classList.toggle('active', isActive);
             });
@@ -541,7 +540,6 @@
             const loc = (key) => appData.i18n[lang][key] || key;
             const ruText = isEnglish ? 'Russian audience' : (isUkrainian ? 'Російськомовна аудиторія' : 'Русскоязычная аудитория');
             const enText = isEnglish ? 'English audience' : (isUkrainian ? 'Англомовна аудиторія' : 'Англоязычная аудитория');
-            const ukText = isEnglish ? 'Ukrainian audience' : (isUkrainian ? 'Україномовна аудиторія' : 'Украиноязычная аудитория');
             
 
             content = `
